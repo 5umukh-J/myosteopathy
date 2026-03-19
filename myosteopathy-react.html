@@ -1,0 +1,3663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MyOsteopathy — Find Verified Osteopaths Near You</title>
+<meta name="description" content="Find trusted, verified osteopaths worldwide. Search, compare and book appointments online."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<!-- React 18 -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<!-- React Router -->
+<script crossorigin src="https://unpkg.com/react-router-dom@6.22.0/dist/umd/react-router-dom.development.js"></script>
+<!-- Babel for JSX -->
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<!-- Google Maps -->
+<script>window.gm_authFailure = function() { window._mapsAuthFailed = true; };</script>
+<script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDbECSHdq-t4GWfJDbDsqvNg_FG6shybQg&libraries=places"></script>
+<style>
+/* ═══════════════════════════════════════════════
+   MYOSTEOPATHY — GLOBAL STYLES
+   ═══════════════════════════════════════════════ */
+
+:root {
+  --navy: #0d1f35;
+  --navy-80: rgba(13,31,53,.8);
+  --teal: #1a6b7a;
+  --teal-lt: #2a8fa0;
+  --teal-dim: rgba(26,107,122,.12);
+  --gold: #c8a96e;
+  --gold-lt: #e2c898;
+  --gold-dim: rgba(200,169,110,.15);
+  --cream: #f7f3ee;
+  --white: #ffffff;
+  --gray-1: #f0ece6;
+  --gray-2: #d8d2c8;
+  --gray-3: #9a9488;
+  --gray-4: #5a5650;
+  --text: #1c1814;
+  --success: #16a34a;
+  --warn: #d97706;
+  --danger: #dc2626;
+  --radius: 12px;
+  --radius-lg: 20px;
+  --shadow: 0 8px 40px rgba(13,31,53,.10);
+  --shadow-md: 0 16px 60px rgba(13,31,53,.18);
+  --shadow-xl: 0 32px 80px rgba(13,31,53,.24);
+  --transition: .32s cubic-bezier(.4,0,.2,1);
+  --transition-spring: .5s cubic-bezier(.34,1.56,.64,1);
+  --nav-h: 72px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  color: var(--text);
+  background: var(--white);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+img { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+button { cursor: pointer; border: none; background: none; font-family: inherit; }
+ul { list-style: none; }
+input, select, textarea {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 1rem;
+  border: none;
+  outline: none;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--gray-1); }
+::-webkit-scrollbar-thumb { background: var(--gray-2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--teal); }
+
+/* ── TYPOGRAPHY ── */
+.serif { font-family: 'Cormorant Garamond', serif; }
+.mono  { font-family: 'DM Mono', monospace; }
+.section-tag {
+  display: inline-block;
+  font-size: .72rem;
+  font-weight: 600;
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 14px;
+}
+.section-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 300;
+  line-height: 1.18;
+  color: var(--navy);
+  margin-bottom: 18px;
+}
+.section-title em { font-style: italic; color: var(--teal); }
+.section-body { font-size: 1rem; line-height: 1.76; color: var(--gray-4); }
+
+/* ── BUTTONS ── */
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px;
+  background: var(--teal); color: white;
+  border-radius: 50px; font-weight: 600; font-size: .95rem;
+  transition: background var(--transition), transform var(--transition), box-shadow var(--transition);
+  box-shadow: 0 4px 20px rgba(26,107,122,.3);
+}
+.btn-primary:hover { background: var(--teal-lt); transform: translateY(-2px); box-shadow: 0 8px 32px rgba(26,107,122,.4); }
+.btn-gold {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 14px 32px;
+  background: var(--gold); color: var(--navy);
+  border-radius: 50px; font-weight: 600; font-size: .95rem;
+  transition: background var(--transition), transform var(--transition);
+}
+.btn-gold:hover { background: var(--gold-lt); transform: translateY(-2px); }
+.btn-outline {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 13px 30px;
+  border: 1.5px solid var(--gray-2); color: var(--gray-4);
+  border-radius: 50px; font-weight: 600; font-size: .95rem;
+  transition: border-color var(--transition), color var(--transition), transform var(--transition);
+}
+.btn-outline:hover { border-color: var(--teal); color: var(--teal); transform: translateY(-2px); }
+.btn-ghost {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 10px 20px;
+  color: var(--gray-4);
+  border-radius: 8px; font-weight: 500; font-size: .9rem;
+  transition: background var(--transition), color var(--transition);
+}
+.btn-ghost:hover { background: var(--gray-1); color: var(--navy); }
+
+/* ── CARDS ── */
+.card {
+  background: white;
+  border: 1.5px solid var(--gray-2);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  transition: border-color var(--transition), box-shadow var(--transition), transform var(--transition);
+}
+.card:hover {
+  border-color: var(--teal);
+  box-shadow: 0 8px 40px rgba(26,107,122,.12);
+  transform: translateY(-4px);
+}
+
+/* ── BADGE ── */
+.badge-verified {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 12px;
+  background: var(--teal-dim); color: var(--teal);
+  border-radius: 50px; font-size: .72rem; font-weight: 600;
+}
+.badge-gold {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 4px 12px;
+  background: var(--gold-dim); color: #9a6b30;
+  border-radius: 50px; font-size: .72rem; font-weight: 600;
+}
+
+/* ── FORM ── */
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-label { font-size: .82rem; font-weight: 600; color: var(--gray-4); }
+.form-input {
+  padding: 12px 16px;
+  border: 1.5px solid var(--gray-2);
+  border-radius: var(--radius);
+  font-size: .95rem; color: var(--text);
+  background: white;
+  transition: border-color var(--transition), box-shadow var(--transition);
+  width: 100%;
+}
+.form-input:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(26,107,122,.1); }
+.form-input::placeholder { color: var(--gray-3); }
+
+/* ── MODAL OVERLAY ── */
+.modal-overlay {
+  position: fixed; inset: 0; z-index: 2000;
+  background: rgba(13,31,53,.65);
+  backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: fadeIn .2s ease;
+}
+.modal-box {
+  background: white;
+  border-radius: 24px;
+  padding: 40px;
+  width: 100%; max-width: 500px;
+  box-shadow: var(--shadow-xl);
+  animation: slideUp .3s var(--transition-spring);
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.modal-close {
+  position: absolute; top: 16px; right: 20px;
+  width: 32px; height: 32px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--gray-3); font-size: 1.4rem;
+  transition: background var(--transition), color var(--transition);
+}
+.modal-close:hover { background: var(--gray-1); color: var(--navy); }
+
+/* ── TOAST ── */
+.toast {
+  position: fixed; bottom: 32px; right: 32px; z-index: 3000;
+  display: flex; align-items: center; gap: 10px;
+  padding: 14px 24px;
+  background: var(--navy); color: white;
+  border-radius: 12px; font-size: .88rem; font-weight: 500;
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+  transform: translateY(100px); opacity: 0;
+  transition: transform .4s var(--transition-spring), opacity .3s ease;
+  pointer-events: none;
+}
+.toast.show { transform: translateY(0); opacity: 1; }
+.toast-success { border-left: 3px solid #16a34a; }
+.toast-error   { border-left: 3px solid #dc2626; }
+.toast-info    { border-left: 3px solid var(--gold); }
+
+/* ── PAGE LAYOUT ── */
+.page { padding-top: var(--nav-h); min-height: 100vh; }
+.section { padding: 100px 48px; }
+.section-inner { max-width: 1200px; margin: 0 auto; }
+
+/* ══ KEYFRAMES ══════════════════════════════════ */
+@keyframes fadeIn    { from { opacity: 0 }                       to { opacity: 1 } }
+@keyframes fadeUp    { from { opacity: 0; transform: translateY(32px) } to { opacity: 1; transform: translateY(0) } }
+@keyframes fadeDown  { from { opacity: 0; transform: translateY(-20px) } to { opacity: 1; transform: translateY(0) } }
+@keyframes scaleIn   { from { opacity: 0; transform: scale(.92) } to { opacity: 1; transform: scale(1) } }
+@keyframes slideUp   { from { opacity: 0; transform: translateY(40px) scale(.98) } to { opacity: 1; transform: translateY(0) scale(1) } }
+@keyframes slideLeft { from { opacity: 0; transform: translateX(30px) } to { opacity: 1; transform: translateX(0) } }
+@keyframes slideRight{ from { opacity: 0; transform: translateX(-30px) } to { opacity: 1; transform: translateX(0) } }
+@keyframes pulse     { 0%,100% { opacity: 1; transform: scale(1) } 50% { opacity: .4; transform: scale(1.5) } }
+@keyframes bounce    { 0%,100% { transform: translateY(0) } 50% { transform: translateY(8px) } }
+@keyframes shimmer   { 0% { background-position: -200% 0 } 100% { background-position: 200% 0 } }
+@keyframes spin      { to { transform: rotate(360deg) } }
+@keyframes meshShift { from { filter: hue-rotate(0deg) brightness(1) } to { filter: hue-rotate(10deg) brightness(1.06) } }
+@keyframes float     { 0%,100% { transform: translateY(0) } 50% { transform: translateY(-12px) } }
+@keyframes pinDrop   { from { transform: translate(-50%,-200%); opacity: 0 } to { transform: translate(-50%,-100%); opacity: 1 } }
+
+/* ── REVEAL ANIMATIONS (scroll-triggered via JS class) ── */
+.reveal {
+  opacity: 0; transform: translateY(28px);
+  transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.4,1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left  { opacity: 0; transform: translateX(-28px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.4,1); }
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-right { opacity: 0; transform: translateX(28px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.8,.4,1); }
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+.reveal-scale { opacity: 0; transform: scale(.94); transition: opacity .6s ease, transform .6s cubic-bezier(.2,.8,.4,1); }
+.reveal-scale.visible { opacity: 1; transform: scale(1); }
+
+/* ── STAGGER DELAYS ── */
+.delay-1 { transition-delay: .1s }
+.delay-2 { transition-delay: .2s }
+.delay-3 { transition-delay: .3s }
+.delay-4 { transition-delay: .4s }
+.delay-5 { transition-delay: .5s }
+.delay-6 { transition-delay: .6s }
+
+/* ── SKELETON LOADING ── */
+.skeleton {
+  background: linear-gradient(90deg, var(--gray-1) 25%, var(--gray-2) 50%, var(--gray-1) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+}
+
+/* ── STAR RATING ── */
+.stars { display: flex; gap: 2px; }
+.star  { color: var(--gray-2); font-size: 1rem; }
+.star.filled { color: #f59e0b; }
+
+/* ── PAGE TRANSITION ── */
+.page-enter { animation: fadeUp .45s ease both; }
+
+/* ── RESPONSIVE ── */
+@media(max-width:1024px) { .section { padding: 72px 32px; } }
+@media(max-width:768px)  { .section { padding: 56px 20px; } .modal-box { padding: 28px 24px; } }
+@media(max-width:480px)  { .section { padding: 40px 16px; } }
+
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel" data-presets="react">
+/* ── Make globals available ── */
+const { useState, useEffect, useRef, useContext, createContext } = React;
+const ReactRouterDOM_available = typeof ReactRouterDOM !== 'undefined';
+/* Fallback shims if CDN fails */
+if (typeof ReactRouterDOM === 'undefined') {
+  console.error('ReactRouterDOM not loaded');
+}
+const {
+  BrowserRouter, Routes, Route, Link, NavLink,
+  useNavigate, useLocation, useParams, useSearchParams
+} = ReactRouterDOM;
+
+// ── CLINIC DATA ───────────────────────────────────
+const CLINICS = [
+  {
+    id: 1,
+    name: 'Bloomsbury Osteopathic Clinic',
+    slug: 'bloomsbury-osteopathic-clinic',
+    initial: 'B',
+    color: 'linear-gradient(135deg,#1a6b7a,#2a8fa0)',
+    practitioners: [
+      { name: 'Dr. Sarah Chen', role: 'Principal Osteopath', qualifications: 'BSc(Hons), DO, PGCE' },
+      { name: 'Dr. James Harlow', role: 'Senior Osteopath', qualifications: 'DO, MSc Sports Med' }
+    ],
+    address: '23 Southampton Row, London WC1B 5HJ',
+    phone: '+44 207 123 4567',
+    email: 'info@bloomsbury-osteo.co.uk',
+    website: 'https://bloomsbury-osteo.co.uk',
+    lat: 51.5196, lng: -0.1270,
+    distance: '0.8 mi',
+    rating: 4.9,
+    reviews: 142,
+    openNow: true,
+    openStatus: 'Open Now',
+    statusColor: 'var(--success)',
+    hours: {
+      Mon: '8:00 – 18:00', Tue: '8:00 – 20:00', Wed: '8:00 – 18:00',
+      Thu: '8:00 – 20:00', Fri: '8:00 – 17:00', Sat: '9:00 – 14:00', Sun: 'Closed'
+    },
+    conditions: ['Back Pain', 'Sports Injury', 'Paediatric', 'Neck Pain', 'Sciatica', '+3 more'],
+    conditionTags: ['Back Pain', 'Sports Injury', 'Paediatric', 'Neck Pain', 'Sciatica', 'Headaches', 'Postural', 'Arthritis'],
+    verified: true,
+    govBody: 'General Osteopathic Council (GOsC)',
+    govNumber: 'GOsC-12345',
+    yearsActive: 12,
+    description: 'A leading multidisciplinary osteopathic clinic in the heart of Bloomsbury. Our team of experienced osteopaths provide evidence-based, patient-centred care for a wide range of musculoskeletal conditions.',
+    services: ['Structural Osteopathy', 'Cranial Osteopathy', 'Sports Rehabilitation', 'Paediatric Osteopathy', 'Pregnancy Care', 'Functional Rehabilitation'],
+    photos: [],
+    mapsAddr: '23+Southampton+Row,+London+WC1B+5HJ',
+    city: 'London',
+    country: 'UK',
+    featured: true,
+    reviewsList: [
+      { author: 'Emma T.', rating: 5, date: '2024-02', text: 'Dr. Chen completely resolved my chronic back pain after years of struggling. The clinic is pristine and the team are wonderfully professional.' },
+      { author: 'Marcus R.', rating: 5, date: '2024-01', text: 'Outstanding care. James treated my sports injury and I was back training within three weeks. Highly recommend.' },
+      { author: 'Priya S.', rating: 4, date: '2023-12', text: 'Very thorough assessment and treatment. Would have given 5 stars but parking nearby is difficult.' }
+    ]
+  },
+  {
+    id: 2,
+    name: 'Kensington Wellness & Osteopathy',
+    slug: 'kensington-wellness-osteopathy',
+    initial: 'K',
+    color: 'linear-gradient(135deg,#1e4d8c,#2d6eb5)',
+    practitioners: [
+      { name: 'Dr. Oliver Marsh', role: 'Principal Osteopath', qualifications: 'DO, MSc' }
+    ],
+    address: '142 Kensington High St, London W8 7RG',
+    phone: '+44 207 555 1234',
+    email: 'hello@kensington-wellness.co.uk',
+    website: 'https://kensington-wellness.co.uk',
+    lat: 51.5015, lng: -0.1872,
+    distance: '1.4 mi',
+    rating: 4.7,
+    reviews: 89,
+    openNow: true,
+    openStatus: 'Open Now',
+    statusColor: 'var(--success)',
+    hours: {
+      Mon: '9:00 – 18:00', Tue: '9:00 – 18:00', Wed: '9:00 – 18:00',
+      Thu: '9:00 – 20:00', Fri: '9:00 – 17:00', Sat: '10:00 – 14:00', Sun: 'Closed'
+    },
+    conditions: ['Pregnancy', 'Postural', 'Headaches'],
+    conditionTags: ['Pregnancy Care', 'Postural Problems', 'Headaches', 'Back Pain', 'Neck Pain'],
+    verified: true,
+    govBody: 'General Osteopathic Council (GOsC)',
+    govNumber: 'GOsC-23456',
+    yearsActive: 8,
+    description: 'Specialising in holistic wellness and osteopathic care in Kensington. We offer a calm, nurturing environment with specialist expertise in pregnancy, postural issues, and headaches.',
+    services: ['Structural Osteopathy', 'Pregnancy Osteopathy', 'Visceral Osteopathy', 'Postural Assessment'],
+    photos: [],
+    mapsAddr: '142+Kensington+High+St,+London+W8+7RG',
+    city: 'London',
+    country: 'UK',
+    featured: true,
+    reviewsList: [
+      { author: 'Laura M.', rating: 5, date: '2024-02', text: 'Dr. Marsh was incredible during my pregnancy. Safe, effective treatment that made a huge difference to my comfort.' },
+      { author: 'David K.', rating: 4, date: '2024-01', text: 'Great clinic, clean and professional. Really helped with my posture issues from desk work.' }
+    ]
+  },
+  {
+    id: 3,
+    name: 'Harley Street Osteopathic Centre',
+    slug: 'harley-street-osteopathic-centre',
+    initial: 'H',
+    color: 'linear-gradient(135deg,#6b3a7d,#9b5aaf)',
+    practitioners: [
+      { name: 'Dr. Priya Nair', role: 'Senior Osteopath', qualifications: 'DO, PhD' },
+      { name: 'Dr. Tom Bradley', role: 'Sports Specialist', qualifications: 'DO, MSc Sports Med' }
+    ],
+    address: '88 Harley Street, London W1G 7HZ',
+    phone: '+44 207 987 1234',
+    email: 'appointments@harleyosteo.co.uk',
+    website: 'https://harleyosteo.co.uk',
+    lat: 51.5195, lng: -0.1472,
+    distance: '2.1 mi',
+    rating: 5.0,
+    reviews: 218,
+    openNow: false,
+    openStatus: 'Closes 6 PM',
+    statusColor: 'var(--warn)',
+    hours: {
+      Mon: '8:00 – 18:00', Tue: '8:00 – 18:00', Wed: '8:00 – 18:00',
+      Thu: '8:00 – 18:00', Fri: '8:00 – 18:00', Sat: '9:00 – 13:00', Sun: 'Closed'
+    },
+    conditions: ['Elite Sports', 'Cranial', 'Visceral', '+5 more'],
+    conditionTags: ['Elite Sports Medicine', 'Cranial Osteopathy', 'Visceral Osteopathy', 'Back Pain', 'Sciatica', 'Arthritis', 'Elderly Care', 'Rehabilitation'],
+    verified: true,
+    govBody: 'General Osteopathic Council (GOsC)',
+    govNumber: 'GOsC-34567',
+    yearsActive: 22,
+    description: 'One of London\'s premier osteopathic centres located on the world-famous Harley Street. Providing elite-level musculoskeletal care to athletes, performers and executives.',
+    services: ['Structural Osteopathy', 'Cranial Osteopathy', 'Visceral Manipulation', 'Elite Sports Rehabilitation', 'Sciatica Treatment', 'Arthritis Management'],
+    photos: [],
+    mapsAddr: '88+Harley+Street,+London+W1G+7HZ',
+    city: 'London',
+    country: 'UK',
+    featured: true,
+    reviewsList: [
+      { author: 'James W.', rating: 5, date: '2024-02', text: 'The gold standard of osteopathic care. Dr. Nair\'s expertise is unparalleled — she identified the root cause of my sciatica immediately.' },
+      { author: 'Sophie R.', rating: 5, date: '2024-01', text: 'World-class facility. As a professional dancer, I need the best — and Harley Street delivers every time.' }
+    ]
+  },
+  {
+    id: 4,
+    name: 'South Bank Spine & Sports Clinic',
+    slug: 'south-bank-spine-sports-clinic',
+    initial: 'S',
+    color: 'linear-gradient(135deg,#c47b2b,#e09a50)',
+    practitioners: [
+      { name: 'Dr. Emma Lawson', role: 'Principal Osteopath', qualifications: 'DO, BSc Sport Science' }
+    ],
+    address: '45 Waterloo Road, London SE1 8TX',
+    phone: '+44 207 444 1234',
+    email: 'reception@southbankspine.co.uk',
+    website: 'https://southbankspine.co.uk',
+    lat: 51.5055, lng: -0.1132,
+    distance: '2.8 mi',
+    rating: 4.8,
+    reviews: 67,
+    openNow: false,
+    openStatus: 'Opens 9 AM',
+    statusColor: 'var(--danger)',
+    hours: {
+      Mon: '9:00 – 17:30', Tue: '9:00 – 17:30', Wed: '9:00 – 17:30',
+      Thu: '9:00 – 19:00', Fri: '9:00 – 17:00', Sat: 'Closed', Sun: 'Closed'
+    },
+    conditions: ['Back Pain', 'Neck Pain', 'Rehabilitation'],
+    conditionTags: ['Back Pain', 'Neck Pain', 'Sports Rehabilitation', 'Disc Problems', 'Whiplash'],
+    verified: true,
+    govBody: 'General Osteopathic Council (GOsC)',
+    govNumber: 'GOsC-45678',
+    yearsActive: 6,
+    description: 'A modern spine and sports rehabilitation clinic on the South Bank. Dr. Lawson specialises in sports injuries, spinal conditions and functional rehabilitation.',
+    services: ['Structural Osteopathy', 'Sports Rehabilitation', 'Spinal Therapy', 'Functional Movement Assessment'],
+    photos: [],
+    mapsAddr: '45+Waterloo+Road,+London+SE1+8TX',
+    city: 'London',
+    country: 'UK',
+    featured: false,
+    reviewsList: [
+      { author: 'Ben A.', rating: 5, date: '2024-01', text: 'Dr. Lawson fixed my neck pain that three other clinics couldn\'t. Very thorough and knowledgeable.' },
+      { author: 'Claire J.', rating: 5, date: '2023-11', text: 'Excellent clinic. Efficient booking, punctual appointments, and genuinely effective treatment.' }
+    ]
+  },
+  {
+    id: 5,
+    name: 'City of London Osteopathy',
+    slug: 'city-of-london-osteopathy',
+    initial: 'C',
+    color: 'linear-gradient(135deg,#1a3a5c,#2a5a8c)',
+    practitioners: [
+      { name: 'Dr. Robert Ashton', role: 'Principal Osteopath', qualifications: 'DO, MSc' }
+    ],
+    address: '12 Moorgate, London EC2R 6DA',
+    phone: '+44 207 600 1234',
+    email: 'info@citylondonosteo.co.uk',
+    website: 'https://citylondonosteo.co.uk',
+    lat: 51.5180, lng: -0.0883,
+    distance: '3.2 mi',
+    rating: 4.6,
+    reviews: 54,
+    openNow: true,
+    openStatus: 'Open Now',
+    statusColor: 'var(--success)',
+    hours: {
+      Mon: '7:30 – 19:00', Tue: '7:30 – 19:00', Wed: '7:30 – 19:00',
+      Thu: '7:30 – 19:00', Fri: '7:30 – 17:00', Sat: 'Closed', Sun: 'Closed'
+    },
+    conditions: ['Back Pain', 'Postural', 'Workplace Injuries'],
+    conditionTags: ['Back Pain', 'Postural Problems', 'Workplace Injuries', 'Stress-Related Tension', 'Neck Pain'],
+    verified: true,
+    govBody: 'General Osteopathic Council (GOsC)',
+    govNumber: 'GOsC-56789',
+    yearsActive: 15,
+    description: 'Conveniently located in the heart of the City, serving busy professionals with early morning and evening appointments. Specialising in work-related musculoskeletal conditions.',
+    services: ['Structural Osteopathy', 'Workplace Assessment', 'Postural Analysis', 'Stress & Tension Relief'],
+    photos: [],
+    mapsAddr: '12+Moorgate,+London+EC2R+6DA',
+    city: 'London',
+    country: 'UK',
+    featured: false,
+    reviewsList: [
+      { author: 'Anya P.', rating: 5, date: '2024-02', text: 'Perfect for City workers. Early appointments available, efficient treatment, and genuinely caring staff.' }
+    ]
+  }
+];
+
+const CITIES = [
+  { name: 'London', country: 'UK', count: 342, lat: 51.5074, lng: -0.1278 },
+  { name: 'Manchester', country: 'UK', count: 128, lat: 53.4808, lng: -2.2426 },
+  { name: 'Birmingham', country: 'UK', count: 104, lat: 52.4862, lng: -1.8904 },
+  { name: 'Sydney', country: 'AU', count: 218, lat: -33.8688, lng: 151.2093 },
+  { name: 'Melbourne', country: 'AU', count: 187, lat: -37.8136, lng: 144.9631 },
+  { name: 'Dubai', country: 'UAE', count: 89, lat: 25.2048, lng: 55.2708 },
+  { name: 'New York', country: 'US', count: 276, lat: 40.7128, lng: -74.0060 },
+  { name: 'Toronto', country: 'CA', count: 156, lat: 43.6532, lng: -79.3832 },
+];
+
+const CONDITIONS = [
+  { icon: '🦴', name: 'Back Pain',       count: 1240, slug: 'back-pain' },
+  { icon: '⚽', name: 'Sports Injury',   count: 892,  slug: 'sports-injury' },
+  { icon: '🦒', name: 'Neck Pain',       count: 743,  slug: 'neck-pain' },
+  { icon: '👶', name: 'Paediatric',      count: 415,  slug: 'paediatric' },
+  { icon: '🤰', name: 'Pregnancy',       count: 387,  slug: 'pregnancy' },
+  { icon: '🧠', name: 'Headaches',       count: 621,  slug: 'headaches' },
+  { icon: '🪑', name: 'Postural',        count: 534,  slug: 'postural' },
+  { icon: '🦵', name: 'Arthritis',       count: 298,  slug: 'arthritis' },
+  { icon: '⚡', name: 'Sciatica',        count: 456,  slug: 'sciatica' },
+  { icon: '🧬', name: 'Cranial',         count: 212,  slug: 'cranial-osteopathy' },
+  { icon: '🫀', name: 'Visceral',        count: 178,  slug: 'visceral-osteopathy' },
+  { icon: '🧓', name: 'Elderly Care',    count: 267,  slug: 'elderly-care' },
+];
+
+const TIME_SLOTS = [
+  '8:00 AM', '8:30 AM', '9:00 AM', '9:30 AM',
+  '10:00 AM', '10:30 AM', '11:00 AM', '11:30 AM',
+  '12:00 PM', '12:30 PM',
+  '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM',
+  '4:00 PM', '4:30 PM', '5:00 PM', '5:30 PM',
+  '6:00 PM', '6:30 PM'
+];
+
+// Scroll-triggered reveal
+function useReveal(threshold = 0.12) {
+  const ref = useRef(null);
+  const [visible, setVisible] = useState(false);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.unobserve(el); } },
+      { threshold }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [threshold]);
+  return [ref, visible];
+}
+
+// Staggered children reveal
+function useStaggerReveal(count, threshold = 0.1) {
+  const ref = useRef(null);
+  const [visibleCount, setVisibleCount] = useState(0);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          let i = 0;
+          const interval = setInterval(() => {
+            setVisibleCount(prev => { const next = prev + 1; if (next >= count) clearInterval(interval); return next; });
+            i++;
+            if (i >= count) clearInterval(interval);
+          }, 120);
+          obs.unobserve(el);
+        }
+      },
+      { threshold }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, [count, threshold]);
+  return [ref, visibleCount];
+}
+
+// Counter animation
+function useCounter(target, duration = 1800, start = false) {
+  const [value, setValue] = useState(0);
+  useEffect(() => {
+    if (!start) return;
+    let startTime = null;
+    const step = (timestamp) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      setValue(Math.floor(eased * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [target, duration, start]);
+  return value;
+}
+
+// Google Maps loader hook
+function useGoogleMaps() {
+  const [loaded, setLoaded] = useState(!!window.google?.maps);
+
+  useEffect(() => {
+    if (window.google?.maps) { setLoaded(true); return; }
+    const existingScript = document.getElementById('gmaps-script');
+    if (existingScript) {
+      existingScript.addEventListener('load', () => setLoaded(true));
+      return;
+    }
+    const script = document.createElement('script');
+    script.id = 'gmaps-script';
+    script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyDbECSHdq-t4GWfJDbDsqvNg_FG6shybQg&libraries=places&loading=async`;
+    script.async = true;
+    script.defer = true;
+    script.onload = () => setLoaded(true);
+    script.onerror = () => console.error('Google Maps failed to load');
+    document.head.appendChild(script);
+  }, []);
+
+  return loaded;
+}
+
+// Typing animation
+function useTyping(words, speed = 80, pause = 2000) {
+  const [text, setText] = useState('');
+  const [wordIdx, setWordIdx] = useState(0);
+  const [charIdx, setCharIdx] = useState(0);
+  const [deleting, setDeleting] = useState(false);
+
+  useEffect(() => {
+    const word = words[wordIdx];
+    let timeout;
+    if (!deleting && charIdx < word.length) {
+      timeout = setTimeout(() => setCharIdx(c => c + 1), speed);
+    } else if (!deleting && charIdx === word.length) {
+      timeout = setTimeout(() => setDeleting(true), pause);
+    } else if (deleting && charIdx > 0) {
+      timeout = setTimeout(() => setCharIdx(c => c - 1), speed / 2);
+    } else if (deleting && charIdx === 0) {
+      setDeleting(false);
+      setWordIdx(i => (i + 1) % words.length);
+    }
+    setText(word.slice(0, charIdx));
+    return () => clearTimeout(timeout);
+  }, [charIdx, deleting, wordIdx, words, speed, pause]);
+
+  return text;
+}
+
+// ── AUTH CONTEXT ────────────────────────────────────────────────────────────
+const AuthContext = createContext(null);
+
+function AuthProvider({ children }) {
+  const [user, setUser] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('mo_user') || 'null'); } catch { return null; }
+  });
+  const [bookings, setBookings] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('mo_bookings') || '[]'); } catch { return []; }
+  });
+  const [savedClinics, setSavedClinics] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('mo_saved') || '[]'); } catch { return []; }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('mo_user', JSON.stringify(user));
+  }, [user]);
+  useEffect(() => {
+    localStorage.setItem('mo_bookings', JSON.stringify(bookings));
+  }, [bookings]);
+  useEffect(() => {
+    localStorage.setItem('mo_saved', JSON.stringify(savedClinics));
+  }, [savedClinics]);
+
+  const login = (email, password) => {
+    // Mock auth — in production connect to real backend
+    const mockUser = {
+      id: 'u_' + Date.now(),
+      email,
+      name: email.split('@')[0].replace(/\./g,' ').replace(/^\w/,c=>c.toUpperCase()),
+      role: 'patient',
+      avatar: email[0].toUpperCase(),
+      joinedDate: new Date().toISOString()
+    };
+    setUser(mockUser);
+    return mockUser;
+  };
+
+  const register = (name, email, password, role = 'patient') => {
+    const newUser = {
+      id: 'u_' + Date.now(),
+      name,
+      email,
+      role,
+      avatar: name[0].toUpperCase(),
+      joinedDate: new Date().toISOString()
+    };
+    setUser(newUser);
+    return newUser;
+  };
+
+  const logout = () => setUser(null);
+
+  const addBooking = (booking) => {
+    const newBooking = { ...booking, id: 'b_' + Date.now(), status: 'confirmed', createdAt: new Date().toISOString() };
+    setBookings(prev => [newBooking, ...prev]);
+    return newBooking;
+  };
+
+  const cancelBooking = (id) => {
+    setBookings(prev => prev.map(b => b.id === id ? { ...b, status: 'cancelled' } : b));
+  };
+
+  const toggleSaved = (clinicId) => {
+    setSavedClinics(prev =>
+      prev.includes(clinicId) ? prev.filter(id => id !== clinicId) : [...prev, clinicId]
+    );
+  };
+
+  const isSaved = (clinicId) => savedClinics.includes(clinicId);
+
+  return (
+    <AuthContext.Provider value={{ user, login, register, logout, bookings, addBooking, cancelBooking, savedClinics, toggleSaved, isSaved }}>
+      {children}
+    </AuthContext.Provider>
+  );
+}
+
+const useAuth = () => useContext(AuthContext);
+
+// ── REVIEWS CONTEXT ─────────────────────────────────────────────────────────
+const ReviewsContext = createContext(null);
+
+function ReviewsProvider({ children }) {
+  const [reviews, setReviews] = useState(() => {
+    try { return JSON.parse(localStorage.getItem('mo_reviews') || '{}'); } catch { return {}; }
+  });
+
+  useEffect(() => {
+    localStorage.setItem('mo_reviews', JSON.stringify(reviews));
+  }, [reviews]);
+
+  const addReview = (clinicId, review) => {
+    setReviews(prev => ({
+      ...prev,
+      [clinicId]: [{ ...review, id: 'r_' + Date.now(), date: new Date().toISOString() }, ...(prev[clinicId] || [])]
+    }));
+  };
+
+  const getReviews = (clinicId) => reviews[clinicId] || [];
+
+  return (
+    <ReviewsContext.Provider value={{ addReview, getReviews }}>
+      {children}
+    </ReviewsContext.Provider>
+  );
+}
+
+const useReviews = () => useContext(ReviewsContext);
+
+// ── TOAST CONTEXT ────────────────────────────────────────────────────────────
+const ToastContext = createContext(null);
+
+function ToastProvider({ children }) {
+  const [toasts, setToasts] = useState([]);
+
+  const toast = (msg, type = 'info') => {
+    const id = Date.now();
+    setToasts(prev => [...prev, { id, msg, type }]);
+    setTimeout(() => setToasts(prev => prev.filter(t => t.id !== id)), 3200);
+  };
+
+  return (
+    <ToastContext.Provider value={toast}>
+      {children}
+      <div style={{ position:'fixed', bottom:32, right:32, zIndex:3000, display:'flex', flexDirection:'column', gap:10 }}>
+        {toasts.map(t => (
+          <div key={t.id} className={`toast show toast-${t.type}`}>
+            <span>{t.type==='success'?'✓':t.type==='error'?'✕':'ℹ'}</span>
+            <span>{t.msg}</span>
+          </div>
+        ))}
+      </div>
+    </ToastContext.Provider>
+  );
+}
+
+const useToast = () => useContext(ToastContext);
+
+function Nav() {
+  const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+  const [authMode, setAuthMode] = useState('login');
+  const [profileOpen, setProfileOpen] = useState(false);
+  const { user, logout } = useAuth();
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 30);
+    window.addEventListener('scroll', onScroll);
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  const handleLogout = () => {
+    logout();
+    setProfileOpen(false);
+    toast('Signed out successfully', 'info');
+    navigate('/');
+  };
+
+  const openAuth = (mode) => { setAuthMode(mode); setAuthOpen(true); };
+
+  return (
+    <>
+      <nav style={{
+        position:'fixed', top:0, left:0, right:0, zIndex:1000,
+        height:'var(--nav-h)',
+        display:'flex', alignItems:'center', justifyContent:'space-between',
+        padding:'0 48px',
+        background: scrolled ? 'rgba(13,31,53,.96)' : 'rgba(13,31,53,.88)',
+        backdropFilter:'blur(16px)',
+        borderBottom: scrolled ? '1px solid rgba(200,169,110,.25)' : '1px solid rgba(200,169,110,.1)',
+        transition:'all .3s ease',
+      }}>
+        {/* Logo */}
+        <Link to="/" style={{display:'flex',alignItems:'center',gap:10}}>
+          <div style={{
+            width:36, height:36,
+            background:'linear-gradient(135deg,var(--teal),var(--teal-lt))',
+            borderRadius:'50%',
+            display:'flex', alignItems:'center', justifyContent:'center',
+            flexShrink:0,
+          }}>
+            <svg width="18" height="18" fill="white" viewBox="0 0 24 24">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+          </div>
+          <span style={{
+            fontFamily:'Cormorant Garamond,serif', fontSize:'1.45rem', fontWeight:600,
+            color:'white', letterSpacing:'-.3px',
+          }}>
+            My<span style={{color:'var(--gold)'}}>Osteopathy</span>
+          </span>
+        </Link>
+
+        {/* Desktop Nav */}
+        <div style={{display:'flex',alignItems:'center',gap:32}} className="nav-desktop">
+          {[
+            { to:'/about',   label:'What is Osteopathy?' },
+            { to:'/find',    label:'Find a Practitioner' },
+            { to:'/conditions', label:'Conditions' },
+            { to:'/practitioners', label:'For Practitioners' },
+          ].map(({ to, label }) => (
+            <NavLink key={to} to={to} style={({ isActive }) => ({
+              color: isActive ? 'var(--gold)' : 'rgba(255,255,255,.72)',
+              fontSize:'.875rem', fontWeight:500, letterSpacing:'.02em',
+              transition:'color .25s ease',
+              borderBottom: isActive ? '1px solid var(--gold)' : '1px solid transparent',
+              paddingBottom:2,
+            })}>
+              {label}
+            </NavLink>
+          ))}
+        </div>
+
+        {/* Right CTA */}
+        <div style={{display:'flex',alignItems:'center',gap:12}}>
+          {user ? (
+            <div style={{position:'relative'}}>
+              <button
+                onClick={() => setProfileOpen(p => !p)}
+                style={{
+                  display:'flex', alignItems:'center', gap:8,
+                  padding:'8px 16px',
+                  background:'rgba(255,255,255,.1)',
+                  border:'1px solid rgba(255,255,255,.15)',
+                  borderRadius:50, color:'white',
+                  fontSize:'.875rem', fontWeight:500,
+                  transition:'background .25s',
+                }}
+                onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,.18)'}
+                onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,.1)'}
+              >
+                <div style={{
+                  width:26, height:26, borderRadius:'50%',
+                  background:'var(--gold)', color:'var(--navy)',
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                  fontWeight:700, fontSize:'.8rem',
+                }}>{user.avatar}</div>
+                {user.name.split(' ')[0]}
+                <span style={{fontSize:'.7rem', opacity:.6}}>▾</span>
+              </button>
+              {profileOpen && (
+                <div style={{
+                  position:'absolute', top:'calc(100% + 8px)', right:0,
+                  background:'white', borderRadius:14,
+                  boxShadow:'0 16px 60px rgba(0,0,0,.2)',
+                  minWidth:200, overflow:'hidden',
+                  animation:'fadeDown .2s ease',
+                  border:'1px solid var(--gray-2)',
+                }}>
+                  <div style={{padding:'14px 18px', borderBottom:'1px solid var(--gray-1)'}}>
+                    <div style={{fontSize:'.85rem', fontWeight:600, color:'var(--navy)'}}>{user.name}</div>
+                    <div style={{fontSize:'.75rem', color:'var(--gray-3)'}}>{user.email}</div>
+                  </div>
+                  {[
+                    { to:'/dashboard', icon:'👤', label:'My Account' },
+                    { to:'/dashboard/bookings', icon:'📅', label:'My Bookings' },
+                    { to:'/dashboard/saved', icon:'🏥', label:'Saved Clinics' },
+                  ].map(item => (
+                    <Link key={item.to} to={item.to}
+                      onClick={() => setProfileOpen(false)}
+                      style={{
+                        display:'flex', alignItems:'center', gap:10,
+                        padding:'11px 18px', fontSize:'.875rem', color:'var(--text)',
+                        transition:'background .2s',
+                      }}
+                      onMouseEnter={e=>e.currentTarget.style.background='var(--gray-1)'}
+                      onMouseLeave={e=>e.currentTarget.style.background='transparent'}
+                    >
+                      {item.icon} {item.label}
+                    </Link>
+                  ))}
+                  <div style={{borderTop:'1px solid var(--gray-1)'}}>
+                    <button onClick={handleLogout} style={{
+                      display:'flex', alignItems:'center', gap:10,
+                      padding:'11px 18px', width:'100%', fontSize:'.875rem',
+                      color:'var(--danger)', transition:'background .2s',
+                    }}
+                    onMouseEnter={e=>e.currentTarget.style.background='var(--gray-1)'}
+                    onMouseLeave={e=>e.currentTarget.style.background='transparent'}
+                    >
+                      🚪 Sign Out
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <>
+              <button onClick={() => openAuth('login')} style={{
+                padding:'9px 20px', color:'rgba(255,255,255,.8)',
+                fontSize:'.875rem', fontWeight:500, borderRadius:50,
+                transition:'background .25s',
+              }}
+              onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,.08)'}
+              onMouseLeave={e=>e.currentTarget.style.background='transparent'}
+              >
+                Sign In
+              </button>
+              <button onClick={() => openAuth('register')} style={{
+                padding:'10px 24px',
+                background:'var(--gold)', color:'var(--navy)',
+                borderRadius:50, fontWeight:600, fontSize:'.875rem',
+                transition:'background .25s, transform .25s',
+              }}
+              onMouseEnter={e=>{e.currentTarget.style.background='var(--gold-lt)';e.currentTarget.style.transform='translateY(-1px)'}}
+              onMouseLeave={e=>{e.currentTarget.style.background='var(--gold)';e.currentTarget.style.transform='translateY(0)'}}
+              >
+                Find Near Me
+              </button>
+            </>
+          )}
+          {/* Mobile burger */}
+          <button onClick={() => setMenuOpen(m => !m)} className="nav-burger" style={{
+            display:'none', flexDirection:'column', gap:5,
+            width:36, height:36, alignItems:'center', justifyContent:'center',
+          }}>
+            <span style={{width:22,height:2,background:'white',borderRadius:2,transition:'all .3s',
+              transform: menuOpen ? 'rotate(45deg) translateY(7px)' : 'none'}}/>
+            <span style={{width:22,height:2,background:'white',borderRadius:2,
+              opacity: menuOpen ? 0 : 1, transition:'opacity .3s'}}/>
+            <span style={{width:22,height:2,background:'white',borderRadius:2,transition:'all .3s',
+              transform: menuOpen ? 'rotate(-45deg) translateY(-7px)' : 'none'}}/>
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile menu */}
+      {menuOpen && (
+        <div style={{
+          position:'fixed', inset:0, zIndex:999,
+          background:'rgba(13,31,53,.97)',
+          paddingTop:'var(--nav-h)',
+          display:'flex', flexDirection:'column', alignItems:'center', justifyContent:'center', gap:32,
+          animation:'fadeIn .2s ease',
+        }}>
+          {[
+            { to:'/',          label:'Home' },
+            { to:'/about',     label:'What is Osteopathy?' },
+            { to:'/find',      label:'Find a Practitioner' },
+            { to:'/conditions',label:'Conditions' },
+            { to:'/practitioners', label:'For Practitioners' },
+          ].map(({ to, label }) => (
+            <Link key={to} to={to} onClick={() => setMenuOpen(false)} style={{
+              fontSize:'1.6rem', fontFamily:'Cormorant Garamond,serif', fontWeight:300,
+              color:'white', letterSpacing:'-.02em',
+            }}>{label}</Link>
+          ))}
+          {!user && (
+            <div style={{display:'flex',gap:16,marginTop:16}}>
+              <button onClick={()=>{openAuth('login');setMenuOpen(false)}} className="btn-outline" style={{color:'white',borderColor:'rgba(255,255,255,.3)'}}>Sign In</button>
+              <button onClick={()=>{openAuth('register');setMenuOpen(false)}} className="btn-gold">Register</button>
+            </div>
+          )}
+        </div>
+      )}
+
+      {authOpen && <AuthModal mode={authMode} onClose={() => setAuthOpen(false)} onSwitch={setAuthMode} />}
+
+      <style>{`
+        @media(max-width:900px) {
+          .nav-desktop { display: none !important; }
+          .nav-burger   { display: flex !important; }
+        }
+      `}</style>
+    </>
+  );
+}
+
+function AuthModal({ mode, onClose, onSwitch }) {
+  const [form, setForm] = useState({ name:'', email:'', password:'', role:'patient' });
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState({});
+  const { login, register } = useAuth();
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  const validate = () => {
+    const e = {};
+    if (mode === 'register' && !form.name.trim()) e.name = 'Name required';
+    if (!form.email.includes('@')) e.email = 'Valid email required';
+    if (form.password.length < 6) e.password = 'Min 6 characters';
+    return e;
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const errs = validate();
+    if (Object.keys(errs).length) { setErrors(errs); return; }
+    setLoading(true);
+    await new Promise(r => setTimeout(r, 600)); // simulate API
+    try {
+      if (mode === 'login') {
+        login(form.email, form.password);
+        toast('Welcome back! 👋', 'success');
+      } else {
+        const user = register(form.name, form.email, form.password, form.role);
+        toast(`Welcome to MyOsteopathy, ${user.name.split(' ')[0]}! 🎉`, 'success');
+        if (form.role === 'practitioner') navigate('/practitioners/portal');
+        else navigate('/dashboard');
+      }
+      onClose();
+    } catch (err) {
+      toast('Something went wrong. Please try again.', 'error');
+    }
+    setLoading(false);
+  };
+
+  const field = (k, label, type='text', placeholder='') => (
+    <div className="form-group">
+      <label className="form-label">{label}</label>
+      <input className={`form-input ${errors[k] ? 'error' : ''}`} type={type}
+        placeholder={placeholder}
+        value={form[k]}
+        onChange={e => { setForm(f=>({...f,[k]:e.target.value})); setErrors(er=>({...er,[k]:undefined})); }}
+        style={errors[k] ? {borderColor:'var(--danger)'} : {}}
+      />
+      {errors[k] && <span style={{fontSize:'.75rem',color:'var(--danger)'}}>{errors[k]}</span>}
+    </div>
+  );
+
+  return (
+    <div className="modal-overlay" onClick={e => e.target===e.currentTarget && onClose()}>
+      <div className="modal-box" style={{maxWidth:460}}>
+        <button className="modal-close" onClick={onClose}>×</button>
+
+        {/* Header */}
+        <div style={{textAlign:'center',marginBottom:32}}>
+          <div style={{
+            width:56, height:56,
+            background:'linear-gradient(135deg,var(--teal),var(--teal-lt))',
+            borderRadius:'50%',
+            display:'flex', alignItems:'center', justifyContent:'center',
+            margin:'0 auto 16px',
+          }}>
+            <svg width="24" height="24" fill="white" viewBox="0 0 24 24">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+            </svg>
+          </div>
+          <h2 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.7rem',fontWeight:600,color:'var(--navy)',marginBottom:6}}>
+            {mode==='login' ? 'Welcome back' : 'Create your account'}
+          </h2>
+          <p style={{fontSize:'.875rem',color:'var(--gray-3)'}}>
+            {mode==='login' ? 'Sign in to manage your bookings and saved clinics' : 'Join thousands finding better osteopathic care'}
+          </p>
+        </div>
+
+        <form onSubmit={handleSubmit} style={{display:'flex',flexDirection:'column',gap:16}}>
+          {mode === 'register' && field('name', 'Full Name', 'text', 'Dr. Jane Smith')}
+          {field('email', 'Email Address', 'email', 'you@example.com')}
+          {field('password', 'Password', 'password', '••••••••')}
+
+          {mode === 'register' && (
+            <div className="form-group">
+              <label className="form-label">I am a…</label>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+                {[
+                  { value:'patient', icon:'🏥', label:'Patient', desc:'Find & book care' },
+                  { value:'practitioner', icon:'🩺', label:'Practitioner', desc:'List my practice' },
+                ].map(opt => (
+                  <button key={opt.value} type="button"
+                    onClick={() => setForm(f=>({...f,role:opt.value}))}
+                    style={{
+                      padding:'14px 12px', textAlign:'left',
+                      border: form.role===opt.value ? '2px solid var(--teal)' : '1.5px solid var(--gray-2)',
+                      borderRadius:10, background: form.role===opt.value ? 'var(--teal-dim)' : 'white',
+                      cursor:'pointer', transition:'all .2s',
+                    }}
+                  >
+                    <div style={{fontSize:'1.3rem',marginBottom:4}}>{opt.icon}</div>
+                    <div style={{fontWeight:600,fontSize:'.9rem',color:'var(--navy)'}}>{opt.label}</div>
+                    <div style={{fontSize:'.75rem',color:'var(--gray-3)'}}>{opt.desc}</div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <button type="submit" className="btn-primary" style={{
+            justifyContent:'center', marginTop:8,
+            opacity: loading ? .7 : 1,
+            pointerEvents: loading ? 'none' : 'auto',
+          }}>
+            {loading ? (
+              <span style={{width:18,height:18,border:'2px solid rgba(255,255,255,.4)',borderTopColor:'white',borderRadius:'50%',animation:'spin .7s linear infinite',display:'inline-block'}}/>
+            ) : null}
+            {loading ? 'Please wait…' : mode==='login' ? 'Sign In' : 'Create Account'}
+          </button>
+        </form>
+
+        <p style={{textAlign:'center',marginTop:20,fontSize:'.875rem',color:'var(--gray-3)'}}>
+          {mode==='login' ? "Don't have an account? " : 'Already have an account? '}
+          <button onClick={() => onSwitch(mode==='login'?'register':'login')}
+            style={{color:'var(--teal)',fontWeight:600,textDecoration:'underline'}}>
+            {mode==='login' ? 'Sign up free' : 'Sign in'}
+          </button>
+        </p>
+
+        <p style={{textAlign:'center',marginTop:12,fontSize:'.72rem',color:'var(--gray-3)',lineHeight:1.6}}>
+          By continuing, you agree to our Terms of Service and Privacy Policy.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function getDaysInMonth(year, month) {
+  return new Date(year, month + 1, 0).getDate();
+}
+function getFirstDayOfMonth(year, month) {
+  return new Date(year, month, 1).getDay();
+}
+const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const DAYS   = ['Su','Mo','Tu','We','Th','Fr','Sa'];
+
+function BookingModal({ clinic, onClose }) {
+  const today = new Date();
+  const [year, setYear]   = useState(today.getFullYear());
+  const [month, setMonth] = useState(today.getMonth());
+  const [day, setDay]     = useState(null);
+  const [slot, setSlot]   = useState(null);
+  const [reason, setReason] = useState('');
+  const [step, setStep]   = useState(1); // 1=date, 2=time, 3=confirm, 4=done
+  const [showAuth, setShowAuth] = useState(false);
+  const [authMode, setAuthMode] = useState('login');
+  const { user, addBooking } = useAuth();
+  const toast = useToast();
+
+  const prevMonth = () => { if (month === 0) { setYear(y=>y-1); setMonth(11); } else setMonth(m=>m-1); setDay(null); };
+  const nextMonth = () => { if (month === 11) { setYear(y=>y+1); setMonth(0); } else setMonth(m=>m+1); setDay(null); };
+
+  const days = getDaysInMonth(year, month);
+  const firstDay = getFirstDayOfMonth(year, month);
+
+  const isDisabled = (d) => {
+    const date = new Date(year, month, d);
+    if (date < today) return true;
+    if (date.getDay() === 0) return true; // no Sundays
+    return false;
+  };
+
+  const handleConfirm = () => {
+    if (!user) { setShowAuth(true); return; }
+    const booking = addBooking({
+      clinicId: clinic.id,
+      clinicName: clinic.name,
+      clinicAddress: clinic.address,
+      date: `${MONTHS[month]} ${day}, ${year}`,
+      time: slot,
+      reason: reason || 'General consultation',
+      practitioner: clinic.practitioners[0]?.name,
+    });
+    setStep(4);
+  };
+
+  const selectedDate = day ? `${MONTHS[month]} ${day}, ${year}` : null;
+
+  if (showAuth) return <AuthModal mode={authMode} onClose={() => setShowAuth(false)} onSwitch={setAuthMode} />;
+
+  return (
+    <div className="modal-overlay" onClick={e => e.target===e.currentTarget && onClose()}>
+      <div className="modal-box" style={{maxWidth:560, padding:'32px'}}>
+        <button className="modal-close" onClick={onClose}>×</button>
+
+        {/* Progress bar */}
+        <div style={{display:'flex',gap:6,marginBottom:28}}>
+          {[1,2,3].map(s => (
+            <div key={s} style={{
+              height:3, flex:1, borderRadius:2,
+              background: s <= step-1 ? 'var(--teal)' : s===step ? 'var(--gold)' : 'var(--gray-2)',
+              transition:'background .4s',
+            }}/>
+          ))}
+        </div>
+
+        {/* STEP 1 — DATE */}
+        {step === 1 && (
+          <div style={{animation:'fadeUp .35s ease'}}>
+            <h3 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.5rem',fontWeight:600,color:'var(--navy)',marginBottom:4}}>
+              Choose a date
+            </h3>
+            <p style={{fontSize:'.875rem',color:'var(--gray-3)',marginBottom:24}}>{clinic.name}</p>
+
+            {/* Month nav */}
+            <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:16}}>
+              <button onClick={prevMonth} style={{
+                width:36, height:36, borderRadius:'50%',
+                background:'var(--gray-1)', color:'var(--navy)',
+                display:'flex', alignItems:'center', justifyContent:'center',
+                fontSize:'1rem', transition:'background .2s',
+              }}
+              onMouseEnter={e=>e.currentTarget.style.background='var(--gray-2)'}
+              onMouseLeave={e=>e.currentTarget.style.background='var(--gray-1)'}
+              >‹</button>
+              <div style={{fontWeight:600,color:'var(--navy)'}}>{MONTHS[month]} {year}</div>
+              <button onClick={nextMonth} style={{
+                width:36, height:36, borderRadius:'50%',
+                background:'var(--gray-1)', color:'var(--navy)',
+                display:'flex', alignItems:'center', justifyContent:'center',
+                fontSize:'1rem', transition:'background .2s',
+              }}
+              onMouseEnter={e=>e.currentTarget.style.background='var(--gray-2)'}
+              onMouseLeave={e=>e.currentTarget.style.background='var(--gray-1)'}
+              >›</button>
+            </div>
+
+            {/* Calendar grid */}
+            <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:4}}>
+              {DAYS.map(d => (
+                <div key={d} style={{textAlign:'center',fontSize:'.75rem',fontWeight:600,color:'var(--gray-3)',padding:'4px 0'}}>{d}</div>
+              ))}
+              {Array.from({length: firstDay}).map((_,i) => <div key={'e'+i}/>)}
+              {Array.from({length: days}).map((_,i) => {
+                const d = i + 1;
+                const disabled = isDisabled(d);
+                const selected = d === day;
+                return (
+                  <button key={d} disabled={disabled} onClick={() => setDay(d)} style={{
+                    aspectRatio:'1',
+                    borderRadius:10,
+                    fontWeight: selected ? 700 : 400,
+                    fontSize:'.875rem',
+                    background: selected ? 'var(--teal)' : 'transparent',
+                    color: selected ? 'white' : disabled ? 'var(--gray-2)' : 'var(--navy)',
+                    cursor: disabled ? 'not-allowed' : 'pointer',
+                    transition:'all .15s',
+                    border: selected ? 'none' : '1.5px solid transparent',
+                  }}
+                  onMouseEnter={e=>{if(!disabled&&!selected)e.currentTarget.style.background='var(--gray-1)'}}
+                  onMouseLeave={e=>{if(!disabled&&!selected)e.currentTarget.style.background='transparent'}}
+                  >{d}</button>
+                );
+              })}
+            </div>
+
+            <button disabled={!day} onClick={() => setStep(2)} className="btn-primary" style={{
+              justifyContent:'center', width:'100%', marginTop:24,
+              opacity: day ? 1 : .5, pointerEvents: day ? 'auto' : 'none',
+            }}>
+              Continue →
+            </button>
+          </div>
+        )}
+
+        {/* STEP 2 — TIME */}
+        {step === 2 && (
+          <div style={{animation:'fadeUp .35s ease'}}>
+            <button onClick={()=>setStep(1)} style={{color:'var(--teal)',fontSize:'.875rem',fontWeight:500,marginBottom:16,display:'flex',alignItems:'center',gap:4}}>
+              ← {selectedDate}
+            </button>
+            <h3 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.5rem',fontWeight:600,color:'var(--navy)',marginBottom:4}}>
+              Choose a time
+            </h3>
+            <p style={{fontSize:'.875rem',color:'var(--gray-3)',marginBottom:20}}>Available slots for {selectedDate}</p>
+
+            <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:8,maxHeight:280,overflowY:'auto'}}>
+              {TIME_SLOTS.map(s => {
+                const unavail = ['9:00 AM','11:30 AM','2:00 PM','4:30 PM'].includes(s);
+                const selected = s === slot;
+                return (
+                  <button key={s} disabled={unavail} onClick={()=>setSlot(s)} style={{
+                    padding:'10px 6px', borderRadius:8,
+                    fontSize:'.85rem', fontWeight: selected ? 600 : 400,
+                    background: selected ? 'var(--teal)' : unavail ? 'var(--gray-1)' : 'white',
+                    color: selected ? 'white' : unavail ? 'var(--gray-2)' : 'var(--navy)',
+                    border: selected ? 'none' : '1.5px solid var(--gray-2)',
+                    cursor: unavail ? 'not-allowed' : 'pointer',
+                    textDecoration: unavail ? 'line-through' : 'none',
+                    transition:'all .15s',
+                    position:'relative',
+                  }}>
+                    {s}
+                    {unavail && <span style={{fontSize:'.65rem',display:'block',color:'var(--gray-3)'}}>Booked</span>}
+                  </button>
+                );
+              })}
+            </div>
+
+            <div style={{marginTop:20}}>
+              <label className="form-label">Reason for visit (optional)</label>
+              <textarea className="form-input" rows={2} placeholder="e.g. Lower back pain for 3 weeks…"
+                value={reason} onChange={e=>setReason(e.target.value)}
+                style={{resize:'none',marginTop:6}}/>
+            </div>
+
+            <button disabled={!slot} onClick={()=>setStep(3)} className="btn-primary" style={{
+              justifyContent:'center', width:'100%', marginTop:20,
+              opacity: slot ? 1 : .5, pointerEvents: slot ? 'auto' : 'none',
+            }}>
+              Review Booking →
+            </button>
+          </div>
+        )}
+
+        {/* STEP 3 — CONFIRM */}
+        {step === 3 && (
+          <div style={{animation:'fadeUp .35s ease'}}>
+            <h3 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.5rem',fontWeight:600,color:'var(--navy)',marginBottom:20}}>
+              Confirm your booking
+            </h3>
+            <div style={{
+              background:'var(--cream)', borderRadius:14, padding:20,
+              display:'flex', flexDirection:'column', gap:14, marginBottom:20,
+            }}>
+              {[
+                { icon:'🏥', label:'Clinic', value:clinic.name },
+                { icon:'📍', label:'Address', value:clinic.address },
+                { icon:'👨‍⚕️', label:'Practitioner', value:clinic.practitioners[0]?.name },
+                { icon:'📅', label:'Date', value:selectedDate },
+                { icon:'⏰', label:'Time', value:slot },
+                { icon:'📝', label:'Reason', value:reason || 'General consultation' },
+              ].map(item => (
+                <div key={item.label} style={{display:'flex',alignItems:'flex-start',gap:12}}>
+                  <span style={{fontSize:'1rem',flexShrink:0}}>{item.icon}</span>
+                  <div>
+                    <div style={{fontSize:'.72rem',fontWeight:600,color:'var(--gray-3)',textTransform:'uppercase',letterSpacing:'.08em'}}>{item.label}</div>
+                    <div style={{fontSize:'.9rem',color:'var(--navy)',fontWeight:500}}>{item.value}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            {!user && (
+              <div style={{
+                background:'rgba(200,169,110,.08)', border:'1px solid rgba(200,169,110,.3)',
+                borderRadius:10, padding:14, marginBottom:16, fontSize:'.85rem', color:'#7a5c1e',
+              }}>
+                ℹ️ You'll need to sign in to confirm your booking and manage appointments.
+              </div>
+            )}
+            <div style={{display:'flex',gap:10}}>
+              <button onClick={()=>setStep(2)} className="btn-outline" style={{flex:1,justifyContent:'center'}}>← Back</button>
+              <button onClick={handleConfirm} className="btn-primary" style={{flex:2,justifyContent:'center'}}>
+                {user ? 'Confirm Booking' : 'Sign In & Book'}
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* STEP 4 — DONE */}
+        {step === 4 && (
+          <div style={{textAlign:'center',animation:'scaleIn .4s var(--transition-spring)',padding:'20px 0'}}>
+            <div style={{
+              width:72, height:72,
+              background:'linear-gradient(135deg,#16a34a,#22c55e)',
+              borderRadius:'50%',
+              display:'flex', alignItems:'center', justifyContent:'center',
+              margin:'0 auto 20px',
+              boxShadow:'0 8px 32px rgba(22,163,74,.3)',
+              animation:'float 3s ease-in-out infinite',
+            }}>
+              <svg width="32" height="32" fill="white" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round"/>
+              </svg>
+            </div>
+            <h3 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.8rem',fontWeight:600,color:'var(--navy)',marginBottom:8}}>
+              Booking Confirmed!
+            </h3>
+            <p style={{color:'var(--gray-4)',marginBottom:6}}>
+              <strong>{selectedDate}</strong> at <strong>{slot}</strong>
+            </p>
+            <p style={{color:'var(--gray-3)',fontSize:'.875rem',marginBottom:28}}>
+              {clinic.name} · A confirmation has been noted in your account.
+            </p>
+            <div style={{display:'flex',gap:10,justifyContent:'center'}}>
+              <button onClick={onClose} className="btn-outline">Close</button>
+              <button onClick={()=>{onClose();window.location='/dashboard/bookings'}} className="btn-primary">
+                View Bookings
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Stars({ rating }) {
+  return (
+    <div className="stars" style={{display:'inline-flex',gap:2}}>
+      {[1,2,3,4,5].map(i => (
+        <span key={i} style={{
+          color: i <= Math.round(rating) ? '#f59e0b' : 'var(--gray-2)',
+          fontSize:'.85rem',
+        }}>★</span>
+      ))}
+    </div>
+  );
+}
+
+function ClinicCard({ clinic, active, onSelect, index = 0 }) {
+  const { toggleSaved, isSaved } = useAuth();
+  const toast = useToast();
+  const [bookingOpen, setBookingOpen] = useState(false);
+  const saved = isSaved(clinic.id);
+
+  const handleSave = (e) => {
+    e.stopPropagation();
+    toggleSaved(clinic.id);
+    toast(saved ? 'Removed from saved' : 'Saved to your list ❤️', 'success');
+  };
+
+  return (
+    <>
+      <div
+        onClick={() => onSelect?.(clinic.id)}
+        style={{
+          background:'white',
+          border: `1.5px solid ${active ? 'var(--teal)' : 'var(--gray-2)'}`,
+          borderRadius:'var(--radius-lg)',
+          padding:20,
+          cursor:'pointer',
+          boxShadow: active ? '0 4px 24px rgba(26,107,122,.15)' : 'none',
+          transform: active ? 'translateX(3px)' : 'none',
+          transition:'all var(--transition)',
+          animation:`fadeUp .4s ease ${index * 0.08}s both`,
+        }}
+      >
+        {/* Top row */}
+        <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',gap:12,marginBottom:12}}>
+          <div style={{display:'flex',alignItems:'flex-start',gap:12,flex:1,minWidth:0}}>
+            <div style={{
+              width:46, height:46, borderRadius:10,
+              background:clinic.color, flexShrink:0,
+              display:'flex',alignItems:'center',justifyContent:'center',
+              fontFamily:'Cormorant Garamond,serif', fontSize:'1.3rem',
+              fontWeight:600, color:'white',
+            }}>{clinic.initial}</div>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{
+                fontWeight:600, fontSize:'.9rem', color:'var(--navy)',
+                whiteSpace:'nowrap', overflow:'hidden', textOverflow:'ellipsis',
+              }}>{clinic.name}</div>
+              <div style={{fontSize:'.78rem',color:'var(--gray-3)',marginTop:2}}>
+                {clinic.practitioners.map(p=>p.name).join(' · ')}
+              </div>
+            </div>
+          </div>
+          <div style={{display:'flex',gap:6,flexShrink:0}}>
+            <button onClick={handleSave} style={{
+              width:30, height:30, borderRadius:'50%',
+              background: saved ? 'rgba(200,169,110,.12)' : 'var(--gray-1)',
+              display:'flex', alignItems:'center', justifyContent:'center',
+              fontSize:'.9rem', transition:'all .2s',
+            }}>{saved ? '❤️' : '🤍'}</button>
+            <div className="badge-verified">
+              <svg width="9" height="9" fill="currentColor" viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+              Verified
+            </div>
+          </div>
+        </div>
+
+        {/* Meta */}
+        <div style={{display:'flex',alignItems:'center',gap:14,fontSize:'.78rem',color:'var(--gray-3)',marginBottom:10}}>
+          <span style={{display:'flex',alignItems:'center',gap:3}}>
+            <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+              <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/>
+              <circle cx="12" cy="9" r="2.5"/>
+            </svg>
+            {clinic.distance}
+          </span>
+          <span style={{display:'flex',alignItems:'center',gap:3}}>
+            <Stars rating={clinic.rating}/>
+            <span>{clinic.rating} ({clinic.reviews})</span>
+          </span>
+          <span style={{color:clinic.statusColor, fontWeight:600}}>{clinic.openStatus}</span>
+        </div>
+
+        {/* Tags */}
+        <div style={{display:'flex',flexWrap:'wrap',gap:5,marginBottom:12}}>
+          {clinic.conditions.slice(0,4).map(c => (
+            <span key={c} style={{
+              padding:'3px 9px', background:'var(--gray-1)',
+              borderRadius:50, fontSize:'.72rem', color:'var(--gray-4)',
+            }}>{c}</span>
+          ))}
+        </div>
+
+        {/* Actions */}
+        <div style={{display:'flex',gap:8}}>
+          <a href={`tel:${clinic.phone}`} onClick={e=>e.stopPropagation()} style={{
+            display:'flex', alignItems:'center', gap:5,
+            padding:'8px 14px',
+            background:'var(--teal)', color:'white',
+            borderRadius:8, fontSize:'.8rem', fontWeight:600,
+            transition:'background .2s',
+          }}
+          onMouseEnter={e=>e.currentTarget.style.background='var(--teal-lt)'}
+          onMouseLeave={e=>e.currentTarget.style.background='var(--teal)'}
+          >
+            <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+              <path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 014.52 12 19.79 19.79 0 011.43 3.4 2 2 0 013.4 1.22h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L7.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 16.92z"/>
+            </svg>
+            Call
+          </a>
+          <button onClick={e=>{e.stopPropagation();setBookingOpen(true)}} style={{
+            display:'flex', alignItems:'center', gap:5,
+            padding:'8px 14px',
+            background:'var(--gold)', color:'var(--navy)',
+            borderRadius:8, fontSize:'.8rem', fontWeight:600,
+            transition:'background .2s',
+          }}
+          onMouseEnter={e=>e.currentTarget.style.background='var(--gold-lt)'}
+          onMouseLeave={e=>e.currentTarget.style.background='var(--gold)'}
+          >
+            📅 Book
+          </button>
+          <Link to={`/clinic/${clinic.slug}`} onClick={e=>e.stopPropagation()} style={{
+            display:'flex', alignItems:'center', gap:5,
+            padding:'8px 14px',
+            border:'1.5px solid var(--gray-2)', color:'var(--gray-4)',
+            borderRadius:8, fontSize:'.8rem', fontWeight:600,
+            transition:'all .2s', marginLeft:'auto',
+          }}
+          onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--teal)';e.currentTarget.style.color='var(--teal)'}}
+          onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--gray-2)';e.currentTarget.style.color='var(--gray-4)'}}
+          >
+            Profile →
+          </Link>
+        </div>
+      </div>
+
+      {bookingOpen && <BookingModal clinic={clinic} onClose={() => setBookingOpen(false)} />}
+    </>
+  );
+}
+
+function MapView({ clinics, selectedId, onSelect }) {
+  const mapRef = useRef(null);
+  const mapInstanceRef = useRef(null);
+  const markersRef = useRef([]);
+  const infoWindowRef = useRef(null);
+  const loaded = useGoogleMaps();
+  const [mapError, setMapError] = useState(false);
+
+  window.gm_authFailure = () => setMapError(true);
+
+  const MAP_STYLES = [
+    {featureType:'all',elementType:'geometry',stylers:[{color:'#f0ece6'}]},
+    {featureType:'water',elementType:'geometry',stylers:[{color:'#c8dde8'}]},
+    {featureType:'road',elementType:'geometry',stylers:[{color:'#ffffff'}]},
+    {featureType:'road.arterial',elementType:'geometry',stylers:[{color:'#e8e4de'}]},
+    {featureType:'poi.park',elementType:'geometry',stylers:[{color:'#d4e8c8'}]},
+    {featureType:'transit',elementType:'geometry',stylers:[{color:'#e2ddd6'}]},
+    {featureType:'poi',elementType:'labels',stylers:[{visibility:'off'}]},
+    {featureType:'administrative',elementType:'labels.text.fill',stylers:[{color:'#5a5650'}]},
+    {featureType:'road',elementType:'labels.text.fill',stylers:[{color:'#9a9488'}]},
+    {featureType:'water',elementType:'labels.text.fill',stylers:[{color:'#1a6b7a'}]},
+  ];
+
+  useEffect(() => {
+    if (!loaded || !mapRef.current || mapInstanceRef.current) return;
+    try {
+      const map = new window.google.maps.Map(mapRef.current, {
+        center: { lat: 51.510, lng: -0.1280 },
+        zoom: 13,
+        styles: MAP_STYLES,
+        disableDefaultUI: true,
+        zoomControl: true,
+        zoomControlOptions: { position: window.google.maps.ControlPosition.RIGHT_TOP },
+      });
+      mapInstanceRef.current = map;
+      infoWindowRef.current = new window.google.maps.InfoWindow();
+
+      markersRef.current = clinics.map((clinic, i) => {
+        const marker = new window.google.maps.Marker({
+          position: { lat: clinic.lat, lng: clinic.lng },
+          map,
+          label: { text: String(i+1), color:'#ffffff', fontSize:'12px', fontWeight:'700' },
+          icon: {
+            path: 'M 0,-18 C -6,-18 -10,-12 -10,-6 C -10,3 0,14 0,14 C 0,14 10,3 10,-6 C 10,-12 6,-18 0,-18 Z',
+            fillColor: '#1a6b7a', fillOpacity:1, strokeColor:'#fff', strokeWeight:2,
+            scale: 1.5, labelOrigin: new window.google.maps.Point(0,-6),
+          },
+          title: clinic.name,
+          animation: window.google.maps.Animation.DROP,
+        });
+        marker.addListener('click', () => onSelect(clinic.id));
+        return marker;
+      });
+    } catch(e) { setMapError(true); }
+  }, [loaded, clinics]);
+
+  // Update markers when selection changes
+  useEffect(() => {
+    if (!markersRef.current.length || !window.google) return;
+    markersRef.current.forEach((marker, i) => {
+      const isActive = clinics[i]?.id === selectedId;
+      marker.setIcon({
+        path:'M 0,-18 C -6,-18 -10,-12 -10,-6 C -10,3 0,14 0,14 C 0,14 10,3 10,-6 C 10,-12 6,-18 0,-18 Z',
+        fillColor: isActive ? '#c8a96e' : '#1a6b7a',
+        fillOpacity:1, strokeColor:'#fff', strokeWeight:2,
+        scale: isActive ? 1.9 : 1.5,
+        labelOrigin: new window.google.maps.Point(0,-6),
+      });
+      marker.setZIndex(isActive ? 999 : 1);
+    });
+
+    const activeClinic = clinics.find(c => c.id === selectedId);
+    const activeIdx = clinics.findIndex(c => c.id === selectedId);
+    if (activeClinic && mapInstanceRef.current) {
+      mapInstanceRef.current.panTo({ lat: activeClinic.lat, lng: activeClinic.lng });
+      if (mapInstanceRef.current.getZoom() < 14) mapInstanceRef.current.setZoom(14);
+      if (infoWindowRef.current && markersRef.current[activeIdx]) {
+        infoWindowRef.current.close();
+        infoWindowRef.current.setContent(`
+          <div style="font-family:DM Sans,sans-serif;padding:4px 6px;min-width:190px;">
+            <div style="font-weight:700;color:#0d1f35;font-size:.9rem;margin-bottom:4px">${activeClinic.name}</div>
+            <div style="color:#5a5650;font-size:.78rem;margin-bottom:6px">${activeClinic.address}</div>
+            <div style="color:#1a6b7a;font-size:.78rem;font-weight:600">${activeClinic.distance} · ⭐ ${activeClinic.rating}</div>
+            <a href="/clinic/${activeClinic.slug}" style="display:inline-block;margin-top:8px;padding:5px 12px;background:#1a6b7a;color:white;border-radius:6px;font-size:.75rem;font-weight:600;text-decoration:none;">View Profile →</a>
+          </div>
+        `);
+        infoWindowRef.current.open(mapInstanceRef.current, markersRef.current[activeIdx]);
+      }
+    }
+  }, [selectedId, clinics]);
+
+  if (mapError) return (
+    <div style={{
+      width:'100%', height:'100%', borderRadius:'var(--radius-lg)',
+      background:'linear-gradient(135deg,#f0ece6,#e8e4de)',
+      display:'flex', flexDirection:'column',
+      alignItems:'center', justifyContent:'center',
+      padding:32, textAlign:'center',
+    }}>
+      <div style={{fontSize:'2rem',marginBottom:12}}>🗺️</div>
+      <div style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.2rem',fontWeight:600,color:'var(--navy)',marginBottom:8}}>
+        Map requires a live domain
+      </div>
+      <p style={{fontSize:'.85rem',color:'var(--gray-4)',lineHeight:1.6,maxWidth:280}}>
+        Add your domain to the API key's allowed referrers in Google Cloud Console to enable the live map.
+      </p>
+    </div>
+  );
+
+  if (!loaded) return (
+    <div style={{
+      width:'100%', height:'100%', borderRadius:'var(--radius-lg)',
+      background:'var(--gray-1)', display:'flex',
+      alignItems:'center', justifyContent:'center', flexDirection:'column', gap:12,
+    }}>
+      <div style={{width:36,height:36,border:'3px solid var(--gray-2)',borderTopColor:'var(--teal)',borderRadius:'50%',animation:'spin .8s linear infinite'}}/>
+      <span style={{fontSize:'.85rem',color:'var(--gray-3)'}}>Loading map…</span>
+    </div>
+  );
+
+  return <div ref={mapRef} style={{width:'100%',height:'100%',borderRadius:'var(--radius-lg)'}} />;
+}
+
+function Footer() {
+  return (
+    <footer style={{background:'var(--navy)',color:'rgba(255,255,255,.6)',paddingTop:64}}>
+      <div style={{maxWidth:1200,margin:'0 auto',padding:'0 48px'}}>
+        <div style={{display:'grid',gridTemplateColumns:'2fr 1fr 1fr 1fr',gap:48,paddingBottom:48,borderBottom:'1px solid rgba(255,255,255,.08)'}}>
+          {/* Brand */}
+          <div>
+            <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:20}}>
+              <div style={{width:36,height:36,background:'linear-gradient(135deg,var(--teal),var(--teal-lt))',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center'}}>
+                <svg width="18" height="18" fill="white" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
+              </div>
+              <span style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.4rem',fontWeight:600,color:'white'}}>
+                My<span style={{color:'var(--gold)'}}>Osteopathy</span>
+              </span>
+            </div>
+            <p style={{lineHeight:1.7,fontSize:'.875rem',maxWidth:280,marginBottom:24}}>
+              The world's most trusted platform for finding verified osteopaths. Connecting patients with professional practitioners in 48 countries.
+            </p>
+            <div style={{display:'flex',gap:12}}>
+              {['𝕏','in','f'].map(s => (
+                <div key={s} style={{
+                  width:36, height:36, borderRadius:'50%',
+                  background:'rgba(255,255,255,.08)',
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                  fontSize:'.85rem', color:'rgba(255,255,255,.5)',
+                  cursor:'pointer', transition:'background .2s',
+                }}
+                onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,.16)'}
+                onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,.08)'}
+                >{s}</div>
+              ))}
+            </div>
+          </div>
+
+          {/* For Patients */}
+          <div>
+            <h5 style={{color:'white',fontSize:'.82rem',fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',marginBottom:20}}>For Patients</h5>
+            {[
+              { to:'/find',       label:'Find an Osteopath' },
+              { to:'/conditions', label:'Browse Conditions' },
+              { to:'/about',      label:'What is Osteopathy?' },
+              { to:'/dashboard',  label:'Patient Accounts' },
+            ].map(l => (
+              <Link key={l.to} to={l.to} style={{display:'block',marginBottom:10,fontSize:'.875rem',transition:'color .2s'}}
+                onMouseEnter={e=>e.currentTarget.style.color='white'}
+                onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,.6)'}
+              >{l.label}</Link>
+            ))}
+          </div>
+
+          {/* For Practitioners */}
+          <div>
+            <h5 style={{color:'white',fontSize:'.82rem',fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',marginBottom:20}}>For Practitioners</h5>
+            {[
+              { to:'/practitioners',        label:'List Your Practice' },
+              { to:'/practitioners/portal', label:'Practitioner Portal' },
+              { to:'/practitioners',        label:'Claim a Listing' },
+            ].map(l => (
+              <Link key={l.label} to={l.to} style={{display:'block',marginBottom:10,fontSize:'.875rem',transition:'color .2s'}}
+                onMouseEnter={e=>e.currentTarget.style.color='white'}
+                onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,.6)'}
+              >{l.label}</Link>
+            ))}
+          </div>
+
+          {/* Company */}
+          <div>
+            <h5 style={{color:'white',fontSize:'.82rem',fontWeight:700,letterSpacing:'.1em',textTransform:'uppercase',marginBottom:20}}>Company</h5>
+            {['About Us','Contact','Privacy Policy','Terms of Service'].map(l => (
+              <div key={l} style={{display:'block',marginBottom:10,fontSize:'.875rem',cursor:'pointer',transition:'color .2s'}}
+                onMouseEnter={e=>e.currentTarget.style.color='white'}
+                onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,.6)'}
+              >{l}</div>
+            ))}
+          </div>
+        </div>
+
+        {/* SEO City Links */}
+        <div style={{padding:'20px 0',borderBottom:'1px solid rgba(255,255,255,.06)',display:'flex',flexWrap:'wrap',gap:'6px 0'}}>
+          <span style={{fontSize:'.75rem',color:'rgba(255,255,255,.25)',marginRight:8,fontFamily:'DM Mono,monospace'}}>Find Osteopaths in:</span>
+          {CITIES.map((city, i) => (
+            <span key={city.name}>
+              <Link to={`/city/${city.name.toLowerCase()}`}
+                style={{fontSize:'.75rem',color:'rgba(255,255,255,.35)',transition:'color .2s'}}
+                onMouseEnter={e=>e.currentTarget.style.color='var(--gold)'}
+                onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,.35)'}
+              >{city.name}</Link>
+              {i < CITIES.length-1 && <span style={{color:'rgba(255,255,255,.15)',margin:'0 8px'}}>·</span>}
+            </span>
+          ))}
+        </div>
+
+        <div style={{padding:'20px 0',display:'flex',justifyContent:'space-between',alignItems:'center',flexWrap:'wrap',gap:12,fontSize:'.75rem'}}>
+          <span>© 2025 MyOsteopathy Ltd. All rights reserved.</span>
+          <span style={{fontFamily:'DM Mono,monospace',color:'rgba(255,255,255,.2)'}}>v2.0 · React + JS</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function StatCounter({ target, suffix='', label, start }) {
+  const value = useCounter(target, 1800, start);
+  return (
+    <div style={{textAlign:'center'}}>
+      <div style={{fontFamily:'Cormorant Garamond,serif',fontSize:'2.4rem',fontWeight:600,color:'var(--gold)',lineHeight:1}}>
+        {value.toLocaleString()}{suffix}
+      </div>
+      <div style={{fontSize:'.75rem',color:'rgba(255,255,255,.42)',textTransform:'uppercase',letterSpacing:'.1em',marginTop:4}}>{label}</div>
+    </div>
+  );
+}
+
+function Home() {
+  const navigate = useNavigate();
+  const [location, setLocation] = useState('');
+  const [speciality, setSpeciality] = useState('');
+  const [selectedClinic, setSelectedClinic] = useState(null);
+  const [statsVisible, setStatsVisible] = useState(false);
+  const statsRef = useRef(null);
+
+  const typingText = useTyping(['back pain', 'sports injuries', 'neck pain', 'headaches', 'pregnancy care'], 70, 2200);
+
+  const [trustRef, trustVisible] = useReveal();
+  const [eduRef, eduVisible] = useReveal();
+  const [condRef, condVisible] = useReveal();
+  const [ctaRef, ctaVisible] = useReveal();
+
+  useEffect(() => {
+    const obs = new IntersectionObserver(([e]) => { if(e.isIntersecting) setStatsVisible(true); }, {threshold:.3});
+    if(statsRef.current) obs.observe(statsRef.current);
+    return () => obs.disconnect();
+  }, []);
+
+  const handleSearch = () => {
+    navigate(`/find?loc=${encodeURIComponent(location)}&spec=${encodeURIComponent(speciality)}`);
+  };
+
+  return (
+    <div className="page">
+      {/* ── HERO ── */}
+      <section style={{
+        position:'relative', minHeight:'100vh',
+        display:'flex', alignItems:'center', justifyContent:'center',
+        overflow:'hidden', background:'var(--navy)',
+      }}>
+        {/* Animated background */}
+        <div style={{
+          position:'absolute', inset:0,
+          background:'radial-gradient(ellipse 80% 60% at 20% 40%,rgba(26,107,122,.5) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 80% 70%,rgba(200,169,110,.14) 0%,transparent 55%),radial-gradient(ellipse 100% 80% at 50% -10%,rgba(42,143,160,.22) 0%,transparent 50%)',
+          animation:'meshShift 14s ease-in-out infinite alternate',
+        }}/>
+        {/* Grid overlay */}
+        <div style={{
+          position:'absolute', inset:0,
+          backgroundImage:'linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px)',
+          backgroundSize:'60px 60px',
+          maskImage:'radial-gradient(ellipse at center,black 30%,transparent 80%)',
+        }}/>
+        {/* Floating orbs */}
+        {[
+          {size:300,x:'10%',y:'20%',color:'rgba(26,107,122,.15)',dur:'8s'},
+          {size:200,x:'75%',y:'60%',color:'rgba(200,169,110,.1)',dur:'11s'},
+          {size:150,x:'85%',y:'15%',color:'rgba(42,143,160,.12)',dur:'9s'},
+        ].map((orb,i) => (
+          <div key={i} style={{
+            position:'absolute', width:orb.size, height:orb.size, borderRadius:'50%',
+            background:orb.color, left:orb.x, top:orb.y,
+            filter:'blur(60px)', animation:`float ${orb.dur} ease-in-out infinite alternate`,
+            animationDelay:`${i*2}s`,
+          }}/>
+        ))}
+
+        <div style={{position:'relative',zIndex:2,textAlign:'center',maxWidth:860,padding:'130px 32px 80px',width:'100%'}}>
+          {/* Eyebrow */}
+          <div style={{
+            display:'inline-flex', alignItems:'center', gap:8,
+            padding:'6px 18px',
+            border:'1px solid rgba(200,169,110,.38)', borderRadius:50,
+            color:'var(--gold)', fontSize:'.78rem', fontWeight:500,
+            letterSpacing:'.12em', textTransform:'uppercase', marginBottom:32,
+            animation:'fadeDown .8s .1s ease both',
+          }}>
+            <span style={{width:6,height:6,borderRadius:'50%',background:'var(--gold)',animation:'pulse 2s infinite'}}/>
+            Trusted in 48 Countries
+          </div>
+
+          {/* Title */}
+          <h1 style={{
+            fontFamily:'Cormorant Garamond,serif',
+            fontSize:'clamp(2.8rem,6vw,5.4rem)',
+            fontWeight:300, color:'white', lineHeight:1.08,
+            marginBottom:24, animation:'fadeUp .8s .2s ease both',
+          }}>
+            Find an osteopath<br/>
+            for <em style={{fontStyle:'italic',color:'var(--gold)'}}>
+              {typingText}<span style={{
+                borderRight:'2px solid var(--gold)',
+                animation:'pulse 1s infinite',
+                marginLeft:1,
+              }}>|</span>
+            </em>
+          </h1>
+
+          <p style={{
+            fontSize:'1.1rem', fontWeight:300, color:'rgba(255,255,255,.62)',
+            lineHeight:1.72, maxWidth:560, margin:'0 auto 48px',
+            animation:'fadeUp .8s .3s ease both',
+          }}>
+            Search 2,400+ verified osteopathic clinics worldwide. Book appointments instantly. Find specialist care for any condition.
+          </p>
+
+          {/* Search bar */}
+          <div style={{
+            display:'flex', alignItems:'stretch',
+            background:'white', borderRadius:18, padding:8,
+            boxShadow:'0 24px 80px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.1)',
+            maxWidth:700, margin:'0 auto',
+            animation:'fadeUp .8s .4s ease both', gap:8,
+          }}>
+            <div style={{display:'flex',alignItems:'center',gap:10,padding:'0 16px',flex:2,borderRight:'1px solid var(--gray-2)'}}>
+              <svg width="16" height="16" fill="none" stroke="var(--teal)" strokeWidth="2" viewBox="0 0 24 24">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
+              </svg>
+              <input
+                value={location}
+                onChange={e=>setLocation(e.target.value)}
+                onKeyDown={e=>e.key==='Enter'&&handleSearch()}
+                placeholder="City, postcode or area…"
+                style={{flex:1,fontSize:'.95rem',color:'var(--text)',background:'transparent'}}
+              />
+            </div>
+            <div style={{display:'flex',alignItems:'center',gap:10,padding:'0 16px',flex:1.5}}>
+              <svg width="16" height="16" fill="none" stroke="var(--teal)" strokeWidth="2" viewBox="0 0 24 24">
+                <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+              </svg>
+              <select value={speciality} onChange={e=>setSpeciality(e.target.value)}
+                style={{flex:1,fontSize:'.95rem',color:speciality?'var(--text)':'var(--gray-3)',background:'transparent',cursor:'pointer',appearance:'none'}}>
+                <option value="">All specialities</option>
+                <option>Back Pain</option><option>Sports Injury</option><option>Neck Pain</option>
+                <option>Paediatric</option><option>Pregnancy</option><option>Headaches</option>
+                <option>Cranial</option><option>Sciatica</option>
+              </select>
+            </div>
+            <button onClick={handleSearch} style={{
+              flexShrink:0, padding:'16px 28px',
+              background:'var(--teal)', color:'white',
+              borderRadius:12, fontWeight:600, fontSize:'.95rem',
+              display:'flex', alignItems:'center', gap:8,
+              transition:'background var(--transition), transform var(--transition)',
+              whiteSpace:'nowrap',
+            }}
+            onMouseEnter={e=>{e.currentTarget.style.background='var(--teal-lt)';e.currentTarget.style.transform='scale(1.02)'}}
+            onMouseLeave={e=>{e.currentTarget.style.background='var(--teal)';e.currentTarget.style.transform='scale(1)'}}
+            >
+              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+                <circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/>
+              </svg>
+              Search
+            </button>
+          </div>
+
+          {/* Quick tags */}
+          <div style={{display:'flex',justifyContent:'center',flexWrap:'wrap',gap:8,marginTop:20,animation:'fadeUp .8s .5s ease both'}}>
+            {['Back Pain','Sports Injury','Pregnancy','Headaches'].map(c => (
+              <button key={c} onClick={()=>navigate(`/find?spec=${c}`)} style={{
+                padding:'6px 14px', background:'rgba(255,255,255,.08)',
+                border:'1px solid rgba(255,255,255,.15)', borderRadius:50,
+                color:'rgba(255,255,255,.65)', fontSize:'.78rem', fontWeight:500,
+                transition:'all .2s', cursor:'pointer',
+              }}
+              onMouseEnter={e=>{e.currentTarget.style.background='rgba(255,255,255,.14)';e.currentTarget.style.color='white'}}
+              onMouseLeave={e=>{e.currentTarget.style.background='rgba(255,255,255,.08)';e.currentTarget.style.color='rgba(255,255,255,.65)'}}
+              >{c}</button>
+            ))}
+          </div>
+
+          {/* Stats */}
+          <div ref={statsRef} style={{
+            display:'flex', justifyContent:'center', gap:64,
+            marginTop:72, animation:'fadeUp .8s .6s ease both',
+          }}>
+            <StatCounter target={2400} suffix="+" label="Clinics Worldwide" start={statsVisible}/>
+            <StatCounter target={48}   suffix=""  label="Countries" start={statsVisible}/>
+            <StatCounter target={98}   suffix="%"  label="Patient Satisfaction" start={statsVisible}/>
+          </div>
+        </div>
+
+        {/* Scroll cue */}
+        <div style={{
+          position:'absolute', bottom:32, left:'50%', transform:'translateX(-50%)',
+          display:'flex', flexDirection:'column', alignItems:'center', gap:8,
+          color:'rgba(255,255,255,.3)', fontSize:'.7rem', letterSpacing:'.1em',
+          textTransform:'uppercase', animation:'bounce 2.2s infinite',
+        }}>
+          <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5"/></svg>
+          Scroll
+        </div>
+      </section>
+
+      {/* ── TRUST BAR ── */}
+      <div ref={trustRef} style={{
+        background:'var(--cream)', borderBottom:'1px solid var(--gray-2)',
+        padding:'18px 48px',
+        display:'flex', alignItems:'center', justifyContent:'center', gap:48, flexWrap:'wrap',
+        transition:'opacity .7s ease, transform .7s ease',
+        opacity: trustVisible ? 1 : 0, transform: trustVisible ? 'none' : 'translateY(16px)',
+      }}>
+        {[
+          { icon:'✓', text:'All practitioners GOsC verified' },
+          { icon:'🛡', text:'Registered with governing bodies' },
+          { icon:'⚡', text:'Real-time availability' },
+          { icon:'🌍', text:'48 countries covered' },
+        ].map(item => (
+          <div key={item.text} style={{display:'flex',alignItems:'center',gap:10,color:'var(--gray-4)',fontSize:'.85rem',fontWeight:500}}>
+            <span style={{color:'var(--teal)',fontSize:'1rem'}}>{item.icon}</span>
+            {item.text}
+          </div>
+        ))}
+      </div>
+
+      {/* ── WHAT IS OSTEOPATHY ── */}
+      <section className="section" ref={eduRef} style={{background:'white'}}>
+        <div className="section-inner">
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:80,alignItems:'center'}}>
+            {/* Visual */}
+            <div style={{
+              transition:'opacity .8s ease, transform .8s ease',
+              opacity: eduVisible ? 1 : 0, transform: eduVisible ? 'none' : 'translateX(-32px)',
+            }}>
+              <div style={{
+                position:'relative', borderRadius:24, overflow:'hidden',
+                aspectRatio:'4/3',
+                background:'linear-gradient(135deg,var(--navy) 0%,var(--teal) 100%)',
+                boxShadow:'var(--shadow-md)',
+              }}>
+                {/* Spine animation */}
+                <div style={{position:'absolute',right:40,top:'50%',transform:'translateY(-50%)',display:'flex',flexDirection:'column',alignItems:'center',gap:5}}>
+                  {Array.from({length:8}).map((_,i) => (
+                    <div key={i} style={{
+                      width: i%2===0 ? 52 : 42, height:11, borderRadius:'50%',
+                      background: i%2===0 ? 'rgba(255,255,255,.22)' : 'rgba(200,169,110,.35)',
+                      animationDelay:`${i*.15}s`,
+                      animation:'spineGlow 2s ease-in-out infinite alternate',
+                    }}/>
+                  ))}
+                </div>
+                {/* Play button */}
+                <div style={{
+                  position:'absolute', inset:0, display:'flex',
+                  alignItems:'center', justifyContent:'center',
+                  background:'rgba(13,31,53,.3)',
+                }}>
+                  <button style={{
+                    width:76, height:76, background:'rgba(255,255,255,.95)', borderRadius:'50%',
+                    display:'flex', alignItems:'center', justifyContent:'center',
+                    boxShadow:'0 8px 32px rgba(0,0,0,.3)',
+                    transition:'transform .3s, box-shadow .3s',
+                  }}
+                  onMouseEnter={e=>{e.currentTarget.style.transform='scale(1.1)';e.currentTarget.style.boxShadow='0 12px 40px rgba(0,0,0,.4)'}}
+                  onMouseLeave={e=>{e.currentTarget.style.transform='scale(1)';e.currentTarget.style.boxShadow='0 8px 32px rgba(0,0,0,.3)'}}
+                  >
+                    <svg width="28" height="28" fill="var(--teal)" viewBox="0 0 24 24" style={{marginLeft:4}}>
+                      <polygon points="5 3 19 12 5 21 5 3"/>
+                    </svg>
+                  </button>
+                </div>
+                <div style={{
+                  position:'absolute', bottom:16, left:16,
+                  background:'rgba(255,255,255,.14)', backdropFilter:'blur(8px)',
+                  border:'1px solid rgba(255,255,255,.2)', color:'white',
+                  fontSize:'.76rem', fontWeight:500, padding:'6px 14px', borderRadius:50,
+                }}>▶ Understanding Osteopathy — 3 min</div>
+              </div>
+            </div>
+
+            {/* Text */}
+            <div style={{
+              transition:'opacity .8s .15s ease, transform .8s .15s ease',
+              opacity: eduVisible ? 1 : 0, transform: eduVisible ? 'none' : 'translateX(32px)',
+            }}>
+              <div className="section-tag">What is Osteopathy?</div>
+              <h2 className="section-title">A holistic approach to <em>healing & movement</em></h2>
+              <p className="section-body" style={{marginBottom:16}}>
+                Osteopathy is a form of drug-free, non-invasive manual medicine that focuses on total body health by treating and strengthening the musculoskeletal framework.
+              </p>
+              <p className="section-body" style={{marginBottom:24}}>
+                Osteopaths use their hands to diagnose, treat and prevent illness and injury using techniques such as soft tissue massage, joint articulation, and cranial osteopathy.
+              </p>
+              <div style={{display:'flex',flexWrap:'wrap',gap:8,marginBottom:32}}>
+                {['Drug-free','Evidence-based','Holistic','Non-invasive','All ages'].map(p => (
+                  <span key={p} style={{
+                    padding:'6px 14px', border:'1.5px solid var(--gray-2)',
+                    borderRadius:50, fontSize:'.8rem', color:'var(--gray-4)',
+                    fontWeight:500, transition:'all .2s', cursor:'default',
+                  }}
+                  onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--teal)';e.currentTarget.style.color='var(--teal)'}}
+                  onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--gray-2)';e.currentTarget.style.color='var(--gray-4)'}}
+                  >{p}</span>
+                ))}
+              </div>
+              <Link to="/about" className="btn-primary" style={{display:'inline-flex'}}>
+                Learn More →
+              </Link>
+            </div>
+          </div>
+
+          {/* Principle cards */}
+          <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:20,marginTop:56}}>
+            {[
+              { icon:'📊', title:'Structure & Function', body:'The body\'s structure and function are intimately related. When structure is compromised, function is affected throughout the entire system.' },
+              { icon:'🔄', title:'Self-Healing', body:'The body has an inherent capacity for self-healing. Osteopathy supports and encourages these natural restorative processes.' },
+              { icon:'🤝', title:'Whole Person Care', body:'Treatment considers the whole person — body, mind, and spirit — not just the presenting symptoms or isolated body part.' },
+            ].map((c, i) => (
+              <div key={i} style={{
+                padding:28, border:'1px solid var(--gray-2)', borderRadius:'var(--radius)',
+                transition:'all var(--transition)',
+                animation: eduVisible ? `fadeUp .6s ${.3+i*.1}s ease both` : 'none',
+              }}
+              onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--teal)';e.currentTarget.style.boxShadow='0 8px 32px rgba(26,107,122,.1)';e.currentTarget.style.transform='translateY(-5px)'}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--gray-2)';e.currentTarget.style.boxShadow='none';e.currentTarget.style.transform='translateY(0)'}}
+              >
+                <div style={{
+                  width:44, height:44, borderRadius:10,
+                  background:'linear-gradient(135deg,rgba(26,107,122,.1),rgba(26,107,122,.2))',
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                  fontSize:'1.3rem', marginBottom:16,
+                }}>{c.icon}</div>
+                <h4 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.1rem',fontWeight:600,color:'var(--navy)',marginBottom:8}}>{c.title}</h4>
+                <p style={{fontSize:'.85rem',lineHeight:1.6,color:'var(--gray-3)'}}>{c.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+        <style>{`@keyframes spineGlow { from{opacity:.3} to{opacity:1} }`}</style>
+      </section>
+
+      {/* ── FEATURED CLINICS ── */}
+      <section className="section" style={{background:'var(--cream)'}}>
+        <div className="section-inner">
+          <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',marginBottom:40,flexWrap:'wrap',gap:16}}>
+            <div>
+              <div className="section-tag">Featured Clinics</div>
+              <h2 className="section-title" style={{marginBottom:0}}>Top-rated osteopaths <em>near you</em></h2>
+            </div>
+            <Link to="/find" className="btn-outline">View all →</Link>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(340px,1fr))',gap:16}}>
+            {CLINICS.filter(c=>c.featured).map((clinic, i) => (
+              <ClinicCard key={clinic.id} clinic={clinic} active={selectedClinic===clinic.id}
+                onSelect={setSelectedClinic} index={i}/>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CONDITIONS ── */}
+      <section className="section" ref={condRef} style={{background:'var(--navy)'}}>
+        <div className="section-inner">
+          <div style={{textAlign:'center',marginBottom:48}}>
+            <div className="section-tag" style={{color:'var(--gold)'}}>Conditions Treated</div>
+            <h2 className="section-title" style={{color:'white'}}>Find specialists for <em style={{color:'var(--gold)'}}>every condition</em></h2>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(180px,1fr))',gap:14}}>
+            {CONDITIONS.map((cond, i) => (
+              <Link key={cond.name} to={`/find?cond=${cond.slug}`} style={{
+                padding:22, border:'1px solid rgba(255,255,255,.07)',
+                borderRadius:'var(--radius)', cursor:'pointer',
+                position:'relative', overflow:'hidden',
+                transition:'all var(--transition)',
+                animation: condVisible ? `fadeUp .5s ${i*.04}s ease both` : 'none',
+                textDecoration:'none',
+              }}
+              onMouseEnter={e=>{e.currentTarget.style.borderColor='rgba(26,107,122,.6)';e.currentTarget.style.transform='translateY(-5px)';e.currentTarget.style.background='rgba(26,107,122,.12)'}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor='rgba(255,255,255,.07)';e.currentTarget.style.transform='translateY(0)';e.currentTarget.style.background='transparent'}}
+              >
+                <div style={{fontSize:'1.5rem',marginBottom:10}}>{cond.icon}</div>
+                <div style={{fontWeight:500,fontSize:'.88rem',color:'white',marginBottom:4}}>{cond.name}</div>
+                <div style={{fontSize:'.73rem',color:'rgba(255,255,255,.28)'}}>{cond.count.toLocaleString()} specialists</div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CITIES ── */}
+      <section className="section" style={{background:'var(--cream)'}}>
+        <div className="section-inner">
+          <div style={{textAlign:'center',marginBottom:40}}>
+            <div className="section-tag">Worldwide Coverage</div>
+            <h2 className="section-title">Osteopaths in <em>your city</em></h2>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:14}}>
+            {CITIES.map((city, i) => (
+              <Link key={city.name} to={`/city/${city.name.toLowerCase()}`} style={{
+                padding:'24px 20px',
+                background:'white', border:'1.5px solid var(--gray-2)',
+                borderRadius:'var(--radius-lg)',
+                display:'flex', flexDirection:'column', alignItems:'center', textAlign:'center',
+                transition:'all var(--transition)',
+                animation:`fadeUp .5s ${i*.06}s ease both`,
+                textDecoration:'none',
+              }}
+              onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--teal)';e.currentTarget.style.transform='translateY(-4px)';e.currentTarget.style.boxShadow='0 8px 32px rgba(26,107,122,.1)'}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--gray-2)';e.currentTarget.style.transform='translateY(0)';e.currentTarget.style.boxShadow='none'}}
+              >
+                <div style={{fontSize:'1.6rem',marginBottom:8}}>
+                  {city.country==='UK'?'🇬🇧':city.country==='AU'?'🇦🇺':city.country==='UAE'?'🇦🇪':city.country==='US'?'🇺🇸':'🇨🇦'}
+                </div>
+                <div style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.2rem',fontWeight:600,color:'var(--navy)',marginBottom:4}}>{city.name}</div>
+                <div style={{fontSize:'.75rem',color:'var(--gray-3)'}}>{city.count} practitioners</div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA ── */}
+      <section ref={ctaRef} style={{
+        background:'linear-gradient(135deg,var(--teal) 0%,var(--navy) 100%)',
+        padding:'80px 48px', textAlign:'center',
+        transition:'opacity .8s ease, transform .8s ease',
+        opacity: ctaVisible ? 1 : 0, transform: ctaVisible ? 'none' : 'translateY(24px)',
+      }}>
+        <div className="section-tag" style={{color:'var(--gold)'}}>Get Started Today</div>
+        <h2 className="section-title" style={{color:'white',marginBottom:16}}>
+          Your nearest osteopath<br/>is <em style={{color:'var(--gold-lt)'}}>just a search away</em>
+        </h2>
+        <p style={{color:'rgba(255,255,255,.6)',maxWidth:480,margin:'0 auto 36px',lineHeight:1.7}}>
+          Join thousands of patients who have found trusted, professional osteopathic care through MyOsteopathy.
+        </p>
+        <div style={{display:'flex',gap:16,justifyContent:'center',flexWrap:'wrap'}}>
+          <Link to="/find" className="btn-gold">Find an Osteopath</Link>
+          <Link to="/practitioners" className="btn-outline" style={{borderColor:'rgba(255,255,255,.3)',color:'rgba(255,255,255,.85)'}}>List Your Practice</Link>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+function FindPractitioner() {
+  const [params] = useSearchParams();
+  const [search, setSearch] = useState(params.get('loc') || 'London, UK');
+  const [speciality, setSpeciality] = useState(params.get('spec') || '');
+  const [radius, setRadius] = useState('10');
+  const [view, setView] = useState('split'); // 'list' | 'map' | 'split'
+  const [selectedId, setSelectedId] = useState(CLINICS[0]?.id);
+  const [filtered, setFiltered] = useState(CLINICS);
+  const [sortBy, setSortBy] = useState('distance');
+  const [openOnly, setOpenOnly] = useState(false);
+
+  useEffect(() => {
+    let result = [...CLINICS];
+    if (speciality) result = result.filter(c => c.conditionTags.some(t => t.toLowerCase().includes(speciality.toLowerCase())));
+    if (openOnly) result = result.filter(c => c.openNow);
+    if (sortBy === 'rating') result.sort((a,b) => b.rating - a.rating);
+    else if (sortBy === 'reviews') result.sort((a,b) => b.reviews - a.reviews);
+    setFiltered(result);
+    if (result.length) setSelectedId(result[0].id);
+  }, [speciality, openOnly, sortBy]);
+
+  return (
+    <div className="page" style={{display:'flex',flexDirection:'column',height:'100vh',overflow:'hidden'}}>
+      {/* Search bar */}
+      <div style={{
+        padding:'16px 32px',
+        background:'white',
+        borderBottom:'1px solid var(--gray-2)',
+        display:'flex', alignItems:'center', gap:12, flexWrap:'wrap',
+        boxShadow:'0 2px 12px rgba(0,0,0,.06)',
+        zIndex:10,
+      }}>
+        {/* Location */}
+        <div style={{display:'flex',alignItems:'center',gap:8,background:'var(--gray-1)',borderRadius:10,padding:'10px 14px',flex:2,minWidth:180}}>
+          <svg width="15" height="15" fill="none" stroke="var(--teal)" strokeWidth="2" viewBox="0 0 24 24">
+            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
+          </svg>
+          <input value={search} onChange={e=>setSearch(e.target.value)}
+            placeholder="City, postcode or area…"
+            style={{background:'transparent',fontSize:'.9rem',color:'var(--text)',flex:1}}/>
+        </div>
+
+        {/* Speciality */}
+        <div style={{display:'flex',alignItems:'center',gap:8,background:'var(--gray-1)',borderRadius:10,padding:'10px 14px',flex:1.5,minWidth:140}}>
+          <svg width="14" height="14" fill="none" stroke="var(--teal)" strokeWidth="2" viewBox="0 0 24 24">
+            <rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/>
+          </svg>
+          <select value={speciality} onChange={e=>setSpeciality(e.target.value)}
+            style={{background:'transparent',fontSize:'.9rem',cursor:'pointer',appearance:'none',flex:1,color:speciality?'var(--text)':'var(--gray-3)'}}>
+            <option value="">All conditions</option>
+            {CONDITIONS.map(c=><option key={c.slug} value={c.name}>{c.name}</option>)}
+          </select>
+        </div>
+
+        {/* Radius */}
+        <div style={{display:'flex',alignItems:'center',gap:8,background:'var(--gray-1)',borderRadius:10,padding:'10px 14px'}}>
+          <select value={radius} onChange={e=>setRadius(e.target.value)}
+            style={{background:'transparent',fontSize:'.9rem',cursor:'pointer',appearance:'none',color:'var(--text)'}}>
+            <option value="5">Within 5 mi</option>
+            <option value="10">Within 10 mi</option>
+            <option value="25">Within 25 mi</option>
+            <option value="50">Within 50 mi</option>
+          </select>
+        </div>
+
+        {/* Open now toggle */}
+        <label style={{display:'flex',alignItems:'center',gap:8,cursor:'pointer',fontSize:'.875rem',color:'var(--gray-4)',userSelect:'none'}}>
+          <div style={{
+            width:38, height:22, borderRadius:11, position:'relative', flexShrink:0,
+            background: openOnly ? 'var(--teal)' : 'var(--gray-2)',
+            transition:'background .25s',
+          }} onClick={()=>setOpenOnly(p=>!p)}>
+            <div style={{
+              position:'absolute', top:3, left: openOnly ? 19 : 3,
+              width:16, height:16, borderRadius:'50%', background:'white',
+              transition:'left .25s', boxShadow:'0 1px 4px rgba(0,0,0,.2)',
+            }}/>
+          </div>
+          Open now
+        </label>
+
+        {/* Sort */}
+        <select value={sortBy} onChange={e=>setSortBy(e.target.value)}
+          style={{padding:'10px 14px',background:'var(--gray-1)',border:'none',borderRadius:10,fontSize:'.9rem',cursor:'pointer',color:'var(--text)'}}>
+          <option value="distance">Sort: Distance</option>
+          <option value="rating">Sort: Rating</option>
+          <option value="reviews">Sort: Reviews</option>
+        </select>
+
+        {/* View toggle */}
+        <div style={{display:'flex',gap:4,background:'var(--gray-1)',borderRadius:10,padding:4,marginLeft:'auto'}}>
+          {[
+            { v:'list', icon:'☰', label:'List' },
+            { v:'split', icon:'⊞', label:'Split' },
+            { v:'map', icon:'🗺', label:'Map' },
+          ].map(opt => (
+            <button key={opt.v} onClick={()=>setView(opt.v)} style={{
+              padding:'7px 14px', borderRadius:8,
+              fontSize:'.82rem', fontWeight:500,
+              background: view===opt.v ? 'white' : 'transparent',
+              color: view===opt.v ? 'var(--navy)' : 'var(--gray-3)',
+              boxShadow: view===opt.v ? '0 2px 8px rgba(0,0,0,.08)' : 'none',
+              transition:'all .2s',
+            }}>{opt.icon} {opt.label}</button>
+          ))}
+        </div>
+      </div>
+
+      {/* Results count */}
+      <div style={{padding:'10px 32px',background:'var(--cream)',borderBottom:'1px solid var(--gray-2)',fontSize:'.82rem',color:'var(--gray-3)'}}>
+        <strong style={{color:'var(--navy)'}}>{filtered.length}</strong> osteopaths found
+        {search && <> near <strong style={{color:'var(--teal)'}}>{search}</strong></>}
+        {speciality && <> specialising in <strong style={{color:'var(--teal)'}}>{speciality}</strong></>}
+      </div>
+
+      {/* Main content */}
+      <div style={{flex:1,display:'flex',overflow:'hidden',minHeight:0}}>
+        {/* List */}
+        {(view==='list'||view==='split') && (
+          <div style={{
+            width: view==='split' ? 420 : '100%',
+            overflowY:'auto',
+            padding:20,
+            display:'flex', flexDirection:'column', gap:12,
+            borderRight: view==='split' ? '1px solid var(--gray-2)' : 'none',
+          }}>
+            {filtered.length === 0 ? (
+              <div style={{textAlign:'center',padding:'60px 20px',color:'var(--gray-3)'}}>
+                <div style={{fontSize:'2.5rem',marginBottom:12}}>🔍</div>
+                <div style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.3rem',color:'var(--navy)',marginBottom:8}}>No clinics found</div>
+                <p style={{fontSize:'.875rem'}}>Try adjusting your filters or expanding the search radius.</p>
+              </div>
+            ) : filtered.map((clinic, i) => (
+              <ClinicCard key={clinic.id} clinic={clinic}
+                active={selectedId===clinic.id}
+                onSelect={setSelectedId}
+                index={i}/>
+            ))}
+          </div>
+        )}
+
+        {/* Map */}
+        {(view==='map'||view==='split') && (
+          <div style={{flex:1,padding:16,minWidth:0}}>
+            <MapView clinics={filtered} selectedId={selectedId} onSelect={setSelectedId}/>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+function Stars({ rating, size='.95rem' }) {
+  return (
+    <span style={{display:'inline-flex',gap:2}}>
+      {[1,2,3,4,5].map(i=>(
+        <span key={i} style={{color:i<=Math.round(rating)?'#f59e0b':'var(--gray-2)',fontSize:size}}>★</span>
+      ))}
+    </span>
+  );
+}
+
+function ClinicProfile() {
+  const { slug } = useParams();
+  const clinic = CLINICS.find(c => c.slug === slug) || CLINICS[0];
+  const [bookingOpen, setBookingOpen] = useState(false);
+  const [tab, setTab] = useState('about'); // about | services | reviews
+  const [reviewForm, setReviewForm] = useState({ rating:5, text:'' });
+  const [submitting, setSubmitting] = useState(false);
+  const { user, toggleSaved, isSaved } = useAuth();
+  const { addReview, getReviews } = useReviews();
+  const toast = useToast();
+  const saved = isSaved(clinic.id);
+  const userReviews = getReviews(clinic.id);
+  const allReviews = [...userReviews, ...clinic.reviewsList];
+
+  const handleReview = async (e) => {
+    e.preventDefault();
+    if (!user) { toast('Please sign in to leave a review', 'info'); return; }
+    if (!reviewForm.text.trim()) { toast('Please write a review', 'info'); return; }
+    setSubmitting(true);
+    await new Promise(r=>setTimeout(r,600));
+    addReview(clinic.id, { ...reviewForm, author: user.name, authorAvatar: user.avatar });
+    setReviewForm({ rating:5, text:'' });
+    setSubmitting(false);
+    toast('Review submitted! Thank you 🙏', 'success');
+  };
+
+  return (
+    <div className="page page-enter">
+      {/* Hero band */}
+      <div style={{
+        background:'linear-gradient(135deg,var(--navy) 0%,var(--teal) 100%)',
+        padding:'48px 48px 0',
+        position:'relative', overflow:'hidden',
+      }}>
+        <div style={{maxWidth:1200,margin:'0 auto'}}>
+          <Link to="/find" style={{
+            display:'inline-flex', alignItems:'center', gap:6,
+            color:'rgba(255,255,255,.65)', fontSize:'.875rem',
+            marginBottom:24, transition:'color .2s',
+          }}
+          onMouseEnter={e=>e.currentTarget.style.color='white'}
+          onMouseLeave={e=>e.currentTarget.style.color='rgba(255,255,255,.65)'}
+          >
+            ← Back to results
+          </Link>
+          <div style={{display:'flex',alignItems:'flex-end',justifyContent:'space-between',paddingBottom:32,gap:20,flexWrap:'wrap'}}>
+            <div style={{display:'flex',alignItems:'flex-end',gap:20}}>
+              <div style={{
+                width:88, height:88, borderRadius:18,
+                background: clinic.color,
+                display:'flex', alignItems:'center', justifyContent:'center',
+                fontFamily:'Cormorant Garamond,serif', fontSize:'2.2rem', color:'white', fontWeight:600,
+                border:'3px solid rgba(255,255,255,.3)',
+                boxShadow:'0 8px 24px rgba(0,0,0,.2)',
+              }}>{clinic.initial}</div>
+              <div>
+                <div style={{display:'flex',alignItems:'center',gap:10,marginBottom:8}}>
+                  <h1 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.9rem',fontWeight:600,color:'white'}}>{clinic.name}</h1>
+                  {clinic.verified && (
+                    <div style={{display:'flex',alignItems:'center',gap:5,padding:'4px 12px',background:'rgba(255,255,255,.15)',backdropFilter:'blur(8px)',border:'1px solid rgba(255,255,255,.2)',color:'white',borderRadius:50,fontSize:'.72rem',fontWeight:600}}>
+                      ✓ GOsC Verified
+                    </div>
+                  )}
+                </div>
+                <div style={{display:'flex',alignItems:'center',gap:16,color:'rgba(255,255,255,.7)',fontSize:'.875rem'}}>
+                  <span>📍 {clinic.address}</span>
+                  <span style={{display:'flex',alignItems:'center',gap:4}}>
+                    <Stars rating={clinic.rating} size='.9rem'/>
+                    <strong style={{color:'white'}}>{clinic.rating}</strong> ({clinic.reviews} reviews)
+                  </span>
+                  <span style={{color:clinic.openNow?'#4ade80':clinic.statusColor,fontWeight:600}}>{clinic.openStatus}</span>
+                </div>
+              </div>
+            </div>
+            <div style={{display:'flex',gap:10}}>
+              <button onClick={()=>toggleSaved(clinic.id)} style={{
+                display:'flex', alignItems:'center', gap:6,
+                padding:'10px 20px',
+                background:'rgba(255,255,255,.12)', backdropFilter:'blur(8px)',
+                border:'1px solid rgba(255,255,255,.2)', borderRadius:50,
+                color:'white', fontWeight:500, fontSize:'.875rem', transition:'all .2s',
+              }}
+              onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,.22)'}
+              onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,.12)'}
+              >{saved?'❤️':'🤍'} {saved?'Saved':'Save'}</button>
+              <button onClick={()=>setBookingOpen(true)} className="btn-gold">
+                📅 Book Appointment
+              </button>
+            </div>
+          </div>
+
+          {/* Tabs */}
+          <div style={{display:'flex',gap:0,borderTop:'1px solid rgba(255,255,255,.1)'}}>
+            {['about','services','reviews'].map(t=>(
+              <button key={t} onClick={()=>setTab(t)} style={{
+                padding:'14px 24px',
+                color: tab===t ? 'white' : 'rgba(255,255,255,.55)',
+                fontWeight: tab===t ? 600 : 400, fontSize:'.9rem',
+                borderBottom: tab===t ? '2px solid var(--gold)' : '2px solid transparent',
+                transition:'all .2s', textTransform:'capitalize',
+              }}>{t==='about'?'About':t==='services'?'Services & Hours':'Reviews'}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Body */}
+      <div style={{maxWidth:1200,margin:'0 auto',padding:'40px 48px',display:'grid',gridTemplateColumns:'1fr 360px',gap:32,alignItems:'start'}}>
+        {/* Left */}
+        <div>
+          {tab === 'about' && (
+            <div style={{animation:'fadeUp .4s ease'}}>
+              <div className="card" style={{marginBottom:20}}>
+                <h3 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.3rem',fontWeight:600,color:'var(--navy)',marginBottom:14}}>About the Clinic</h3>
+                <p style={{lineHeight:1.75,color:'var(--gray-4)',marginBottom:20}}>{clinic.description}</p>
+                <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
+                  {clinic.conditionTags.map(c=>(
+                    <span key={c} style={{padding:'5px 12px',background:'var(--gray-1)',borderRadius:50,fontSize:'.78rem',color:'var(--gray-4)'}}>{c}</span>
+                  ))}
+                </div>
+              </div>
+
+              <div className="card" style={{marginBottom:20}}>
+                <h3 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.3rem',fontWeight:600,color:'var(--navy)',marginBottom:18}}>Our Team</h3>
+                <div style={{display:'flex',flexDirection:'column',gap:14}}>
+                  {clinic.practitioners.map(p=>(
+                    <div key={p.name} style={{display:'flex',alignItems:'center',gap:14,padding:'14px',background:'var(--cream)',borderRadius:12}}>
+                      <div style={{
+                        width:52, height:52, borderRadius:12,
+                        background:`linear-gradient(135deg,var(--teal),var(--teal-lt))`,
+                        display:'flex', alignItems:'center', justifyContent:'center',
+                        fontFamily:'Cormorant Garamond,serif', fontSize:'1.4rem', color:'white', fontWeight:600,
+                      }}>{p.name[0]}</div>
+                      <div>
+                        <div style={{fontWeight:600,color:'var(--navy)',marginBottom:2}}>{p.name}</div>
+                        <div style={{fontSize:'.82rem',color:'var(--gray-3)'}}>{p.role} · {p.qualifications}</div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="card" style={{padding:0,overflow:'hidden',height:320}}>
+                <MapView clinics={[clinic]} selectedId={clinic.id} onSelect={()=>{}}/>
+              </div>
+            </div>
+          )}
+
+          {tab === 'services' && (
+            <div style={{animation:'fadeUp .4s ease'}}>
+              <div className="card" style={{marginBottom:20}}>
+                <h3 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.3rem',fontWeight:600,color:'var(--navy)',marginBottom:18}}>Services Offered</h3>
+                <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:10}}>
+                  {clinic.services.map(s=>(
+                    <div key={s} style={{
+                      display:'flex', alignItems:'center', gap:10,
+                      padding:'14px', background:'var(--cream)', borderRadius:10,
+                    }}>
+                      <div style={{width:8,height:8,borderRadius:'50%',background:'var(--teal)',flexShrink:0}}/>
+                      <span style={{fontSize:'.875rem',color:'var(--navy)',fontWeight:500}}>{s}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="card">
+                <h3 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.3rem',fontWeight:600,color:'var(--navy)',marginBottom:18}}>Opening Hours</h3>
+                <div style={{display:'flex',flexDirection:'column',gap:0}}>
+                  {Object.entries(clinic.hours).map(([day,hrs],i)=>(
+                    <div key={day} style={{
+                      display:'flex', justifyContent:'space-between', alignItems:'center',
+                      padding:'10px 0',
+                      borderBottom: i < Object.keys(clinic.hours).length-1 ? '1px solid var(--gray-1)' : 'none',
+                    }}>
+                      <span style={{fontWeight:500,color:'var(--navy)',fontSize:'.875rem'}}>{day}</span>
+                      <span style={{fontSize:'.875rem',color:hrs==='Closed'?'var(--danger)':'var(--gray-4)',fontWeight:hrs==='Closed'?500:400}}>{hrs}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {tab === 'reviews' && (
+            <div style={{animation:'fadeUp .4s ease'}}>
+              {/* Leave review */}
+              <div className="card" style={{marginBottom:20}}>
+                <h3 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.3rem',fontWeight:600,color:'var(--navy)',marginBottom:18}}>Leave a Review</h3>
+                <form onSubmit={handleReview} style={{display:'flex',flexDirection:'column',gap:14}}>
+                  <div>
+                    <div className="form-label" style={{marginBottom:8}}>Your Rating</div>
+                    <div style={{display:'flex',gap:6}}>
+                      {[1,2,3,4,5].map(r=>(
+                        <button key={r} type="button" onClick={()=>setReviewForm(f=>({...f,rating:r}))} style={{
+                          fontSize:'1.6rem', background:'none', transition:'transform .15s',
+                          transform: r<=reviewForm.rating ? 'scale(1.1)' : 'scale(1)',
+                        }}>
+                          <span style={{color:r<=reviewForm.rating?'#f59e0b':'var(--gray-2)'}}>★</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <textarea className="form-input" rows={3} placeholder="Share your experience with this clinic…"
+                    value={reviewForm.text} onChange={e=>setReviewForm(f=>({...f,text:e.target.value}))}
+                    style={{resize:'none'}}/>
+                  <button type="submit" className="btn-primary" style={{
+                    justifyContent:'center', opacity:submitting?.7:1,
+                  }}>
+                    {submitting ? 'Submitting…' : 'Submit Review'}
+                  </button>
+                </form>
+              </div>
+
+              {/* Reviews list */}
+              <div style={{display:'flex',flexDirection:'column',gap:14}}>
+                {allReviews.map((r, i) => (
+                  <div key={i} className="card" style={{transition:'none'}}>
+                    <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}}>
+                      <div style={{display:'flex',alignItems:'center',gap:10}}>
+                        <div style={{
+                          width:36, height:36, borderRadius:'50%',
+                          background:'linear-gradient(135deg,var(--teal),var(--teal-lt))',
+                          display:'flex', alignItems:'center', justifyContent:'center',
+                          color:'white', fontWeight:700, fontSize:'.875rem',
+                        }}>{r.authorAvatar || r.author[0]}</div>
+                        <div>
+                          <div style={{fontWeight:600,color:'var(--navy)',fontSize:'.9rem'}}>{r.author}</div>
+                          <div style={{fontSize:'.72rem',color:'var(--gray-3)'}}>{r.date ? new Date(r.date).toLocaleDateString('en-GB',{year:'numeric',month:'short'}) : r.date}</div>
+                        </div>
+                      </div>
+                      <Stars rating={r.rating}/>
+                    </div>
+                    <p style={{fontSize:'.875rem',lineHeight:1.65,color:'var(--gray-4)'}}>{r.text}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Sidebar */}
+        <div style={{display:'flex',flexDirection:'column',gap:16,position:'sticky',top:'calc(var(--nav-h) + 20px)'}}>
+          {/* Book card */}
+          <div className="card" style={{background:'linear-gradient(135deg,var(--navy),var(--teal))',border:'none'}}>
+            <div style={{color:'rgba(255,255,255,.7)',fontSize:'.8rem',marginBottom:4}}>Ready to book?</div>
+            <div style={{color:'white',fontFamily:'Cormorant Garamond,serif',fontSize:'1.3rem',fontWeight:600,marginBottom:16}}>Schedule your appointment</div>
+            <button onClick={()=>setBookingOpen(true)} className="btn-gold" style={{width:'100%',justifyContent:'center'}}>
+              📅 Book Appointment
+            </button>
+            <a href={`tel:${clinic.phone}`} style={{
+              display:'flex', alignItems:'center', justifyContent:'center', gap:8,
+              marginTop:10, padding:'10px',
+              background:'rgba(255,255,255,.1)', border:'1px solid rgba(255,255,255,.2)',
+              borderRadius:10, color:'white', fontSize:'.875rem', fontWeight:500,
+            }}>
+              📞 {clinic.phone}
+            </a>
+          </div>
+
+          {/* Quick stats */}
+          <div className="card">
+            <h4 style={{fontWeight:600,color:'var(--navy)',marginBottom:14,fontSize:'.9rem'}}>Quick Stats</h4>
+            {[
+              { label:'Rating', value:`${clinic.rating} / 5.0` },
+              { label:'Reviews', value:clinic.reviews },
+              { label:'Years Active', value:`${clinic.yearsActive} years` },
+              { label:'Governing Body', value:'GOsC', sub:clinic.govNumber },
+            ].map(s=>(
+              <div key={s.label} style={{
+                display:'flex', justifyContent:'space-between', alignItems:'flex-start',
+                padding:'8px 0', borderBottom:'1px solid var(--gray-1)',
+              }}>
+                <span style={{fontSize:'.82rem',color:'var(--gray-3)'}}>{s.label}</span>
+                <div style={{textAlign:'right'}}>
+                  <div style={{fontSize:'.875rem',fontWeight:600,color:'var(--navy)'}}>{s.value}</div>
+                  {s.sub && <div style={{fontSize:'.72rem',color:'var(--gray-3)'}}>{s.sub}</div>}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Directions */}
+          <a href={`https://www.google.com/maps/dir/?api=1&destination=${clinic.mapsAddr}`} target="_blank" rel="noreferrer"
+            style={{
+              display:'flex', alignItems:'center', justifyContent:'center', gap:8,
+              padding:'12px', background:'var(--cream)',
+              border:'1.5px solid var(--gray-2)', borderRadius:12,
+              color:'var(--teal)', fontWeight:600, fontSize:'.875rem',
+              transition:'all .2s',
+            }}
+            onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--teal)';e.currentTarget.style.background='var(--teal-dim)'}}
+            onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--gray-2)';e.currentTarget.style.background='var(--cream)'}}
+          >
+            🗺️ Get Directions
+          </a>
+        </div>
+      </div>
+
+      {bookingOpen && <BookingModal clinic={clinic} onClose={()=>setBookingOpen(false)}/>}
+    </div>
+  );
+}
+
+function Stars({ rating }) {
+  return (
+    <span style={{display:'inline-flex',gap:2}}>
+      {[1,2,3,4,5].map(i=>(
+        <span key={i} style={{color:i<=Math.round(rating)?'#f59e0b':'var(--gray-2)',fontSize:'.85rem'}}>★</span>
+      ))}
+    </span>
+  );
+}
+
+function Dashboard() {
+  const { user, bookings, cancelBooking, savedClinics, toggleSaved } = useAuth();
+  const toast = useToast();
+  const [tab, setTab] = useState('bookings');
+
+  if (!user) return <Navigate to="/" replace />;
+
+  const savedClinicData = CLINICS.filter(c => savedClinics.includes(c.id));
+
+  const handleCancel = (id) => {
+    if (window.confirm('Cancel this booking?')) {
+      cancelBooking(id);
+      toast('Booking cancelled', 'info');
+    }
+  };
+
+  const statusColor = { confirmed:'var(--teal)', cancelled:'var(--danger)', completed:'var(--gray-3)' };
+  const statusBg    = { confirmed:'rgba(26,107,122,.1)', cancelled:'rgba(220,38,38,.08)', completed:'var(--gray-1)' };
+
+  return (
+    <div className="page page-enter">
+      {/* Header */}
+      <div style={{
+        background:'linear-gradient(135deg,var(--navy) 0%,var(--teal) 100%)',
+        padding:'48px 48px 0',
+      }}>
+        <div style={{maxWidth:1100,margin:'0 auto'}}>
+          <div style={{display:'flex',alignItems:'center',gap:20,marginBottom:32}}>
+            <div style={{
+              width:72, height:72, borderRadius:'50%',
+              background:'linear-gradient(135deg,var(--gold),var(--gold-lt))',
+              display:'flex', alignItems:'center', justifyContent:'center',
+              fontFamily:'Cormorant Garamond,serif', fontSize:'1.8rem',
+              color:'var(--navy)', fontWeight:700,
+              border:'3px solid rgba(255,255,255,.3)',
+            }}>{user.avatar}</div>
+            <div>
+              <h1 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.8rem',fontWeight:600,color:'white',marginBottom:4}}>
+                Welcome back, {user.name.split(' ')[0]}
+              </h1>
+              <p style={{color:'rgba(255,255,255,.6)',fontSize:'.875rem'}}>{user.email}</p>
+            </div>
+          </div>
+
+          {/* Stat pills */}
+          <div style={{display:'flex',gap:24,marginBottom:24,flexWrap:'wrap'}}>
+            {[
+              { label:'Total Bookings', value: bookings.length },
+              { label:'Upcoming',       value: bookings.filter(b=>b.status==='confirmed').length },
+              { label:'Saved Clinics',  value: savedClinics.length },
+            ].map(s => (
+              <div key={s.label} style={{
+                padding:'12px 20px',
+                background:'rgba(255,255,255,.1)',
+                backdropFilter:'blur(8px)',
+                border:'1px solid rgba(255,255,255,.15)',
+                borderRadius:12, textAlign:'center',
+              }}>
+                <div style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.6rem',fontWeight:600,color:'var(--gold)'}}>{s.value}</div>
+                <div style={{fontSize:'.72rem',color:'rgba(255,255,255,.5)',textTransform:'uppercase',letterSpacing:'.08em'}}>{s.label}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Tabs */}
+          <div style={{display:'flex',gap:0}}>
+            {['bookings','saved','profile'].map(t => (
+              <button key={t} onClick={()=>setTab(t)} style={{
+                padding:'12px 24px',
+                color: tab===t ? 'white' : 'rgba(255,255,255,.5)',
+                fontWeight: tab===t ? 600 : 400, fontSize:'.9rem',
+                borderBottom: tab===t ? '2px solid var(--gold)' : '2px solid transparent',
+                transition:'all .2s', textTransform:'capitalize',
+              }}>
+                {t === 'bookings' ? '📅 My Bookings' : t === 'saved' ? '❤️ Saved Clinics' : '👤 Profile'}
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* Content */}
+      <div style={{maxWidth:1100,margin:'0 auto',padding:'40px 48px'}}>
+
+        {/* ── BOOKINGS TAB ── */}
+        {tab === 'bookings' && (
+          <div style={{animation:'fadeUp .4s ease'}}>
+            <div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:24}}>
+              <h2 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.5rem',fontWeight:600,color:'var(--navy)'}}>
+                Your Appointments
+              </h2>
+              <Link to="/find" className="btn-primary">+ Book New</Link>
+            </div>
+
+            {bookings.length === 0 ? (
+              <div style={{textAlign:'center',padding:'80px 20px',background:'var(--cream)',borderRadius:20}}>
+                <div style={{fontSize:'3rem',marginBottom:16}}>📅</div>
+                <h3 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.4rem',color:'var(--navy)',marginBottom:8}}>No bookings yet</h3>
+                <p style={{color:'var(--gray-3)',marginBottom:24}}>Find an osteopath and book your first appointment.</p>
+                <Link to="/find" className="btn-primary">Find a Practitioner</Link>
+              </div>
+            ) : (
+              <div style={{display:'flex',flexDirection:'column',gap:14}}>
+                {bookings.map(b => (
+                  <div key={b.id} style={{
+                    background:'white', border:'1.5px solid var(--gray-2)',
+                    borderRadius:'var(--radius-lg)', padding:22,
+                    display:'flex', alignItems:'center', gap:20, flexWrap:'wrap',
+                    transition:'box-shadow .2s',
+                  }}
+                  onMouseEnter={e=>e.currentTarget.style.boxShadow='0 4px 20px rgba(0,0,0,.07)'}
+                  onMouseLeave={e=>e.currentTarget.style.boxShadow='none'}
+                  >
+                    {/* Icon */}
+                    <div style={{
+                      width:52, height:52, borderRadius:12, flexShrink:0,
+                      background:'linear-gradient(135deg,var(--teal),var(--teal-lt))',
+                      display:'flex', alignItems:'center', justifyContent:'center',
+                      fontSize:'1.4rem',
+                    }}>🏥</div>
+
+                    {/* Info */}
+                    <div style={{flex:1,minWidth:200}}>
+                      <div style={{fontWeight:600,color:'var(--navy)',marginBottom:3}}>{b.clinicName}</div>
+                      <div style={{fontSize:'.82rem',color:'var(--gray-3)',display:'flex',gap:12,flexWrap:'wrap'}}>
+                        <span>📅 {b.date}</span>
+                        <span>⏰ {b.time}</span>
+                        {b.practitioner && <span>👨‍⚕️ {b.practitioner}</span>}
+                      </div>
+                      {b.reason && (
+                        <div style={{marginTop:4,fontSize:'.78rem',color:'var(--gray-3)'}}>
+                          📝 {b.reason}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Status */}
+                    <div style={{
+                      padding:'5px 14px', borderRadius:50,
+                      background: statusBg[b.status],
+                      color: statusColor[b.status],
+                      fontSize:'.78rem', fontWeight:600,
+                      textTransform:'capitalize',
+                    }}>{b.status}</div>
+
+                    {/* Actions */}
+                    <div style={{display:'flex',gap:8}}>
+                      <Link to={`/clinic/${CLINICS.find(c=>c.id===b.clinicId)?.slug||''}`}
+                        style={{
+                          padding:'8px 14px', border:'1.5px solid var(--gray-2)',
+                          borderRadius:8, fontSize:'.8rem', color:'var(--gray-4)',
+                          fontWeight:500, transition:'all .2s',
+                        }}
+                        onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--teal)';e.currentTarget.style.color='var(--teal)'}}
+                        onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--gray-2)';e.currentTarget.style.color='var(--gray-4)'}}
+                      >View Clinic</Link>
+                      {b.status === 'confirmed' && (
+                        <button onClick={()=>handleCancel(b.id)} style={{
+                          padding:'8px 14px', border:'1.5px solid rgba(220,38,38,.2)',
+                          borderRadius:8, fontSize:'.8rem', color:'var(--danger)',
+                          fontWeight:500, transition:'all .2s',
+                        }}
+                        onMouseEnter={e=>{e.currentTarget.style.background='rgba(220,38,38,.05)'}}
+                        onMouseLeave={e=>{e.currentTarget.style.background='transparent'}}
+                        >Cancel</button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── SAVED TAB ── */}
+        {tab === 'saved' && (
+          <div style={{animation:'fadeUp .4s ease'}}>
+            <h2 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.5rem',fontWeight:600,color:'var(--navy)',marginBottom:24}}>
+              Saved Clinics
+            </h2>
+            {savedClinicData.length === 0 ? (
+              <div style={{textAlign:'center',padding:'80px 20px',background:'var(--cream)',borderRadius:20}}>
+                <div style={{fontSize:'3rem',marginBottom:16}}>❤️</div>
+                <h3 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.4rem',color:'var(--navy)',marginBottom:8}}>No saved clinics yet</h3>
+                <p style={{color:'var(--gray-3)',marginBottom:24}}>Save clinics you like by clicking the heart icon on any listing.</p>
+                <Link to="/find" className="btn-primary">Browse Clinics</Link>
+              </div>
+            ) : (
+              <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(320px,1fr))',gap:16}}>
+                {savedClinicData.map(clinic => (
+                  <div key={clinic.id} style={{
+                    background:'white', border:'1.5px solid var(--gray-2)',
+                    borderRadius:'var(--radius-lg)', padding:22,
+                    transition:'all .2s',
+                  }}
+                  onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--teal)';e.currentTarget.style.boxShadow='0 4px 20px rgba(26,107,122,.1)'}}
+                  onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--gray-2)';e.currentTarget.style.boxShadow='none'}}
+                  >
+                    <div style={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',marginBottom:12}}>
+                      <div style={{display:'flex',gap:12}}>
+                        <div style={{
+                          width:44, height:44, borderRadius:10,
+                          background:clinic.color,
+                          display:'flex', alignItems:'center', justifyContent:'center',
+                          fontFamily:'Cormorant Garamond,serif', fontSize:'1.2rem', color:'white', fontWeight:600,
+                        }}>{clinic.initial}</div>
+                        <div>
+                          <div style={{fontWeight:600,color:'var(--navy)',fontSize:'.9rem'}}>{clinic.name}</div>
+                          <div style={{fontSize:'.78rem',color:'var(--gray-3)',marginTop:2}}>
+                            <Stars rating={clinic.rating}/> {clinic.rating} ({clinic.reviews})
+                          </div>
+                        </div>
+                      </div>
+                      <button onClick={()=>{toggleSaved(clinic.id);toast('Removed from saved','info')}}
+                        style={{background:'none',fontSize:'1.1rem',cursor:'pointer',color:'var(--danger)'}}>❤️</button>
+                    </div>
+                    <div style={{fontSize:'.78rem',color:'var(--gray-3)',marginBottom:12}}>📍 {clinic.address}</div>
+                    <div style={{display:'flex',gap:8}}>
+                      <Link to={`/clinic/${clinic.slug}`} className="btn-primary" style={{flex:1,justifyContent:'center',padding:'9px 12px',fontSize:'.8rem'}}>View Profile</Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── PROFILE TAB ── */}
+        {tab === 'profile' && (
+          <div style={{animation:'fadeUp .4s ease',maxWidth:560}}>
+            <h2 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.5rem',fontWeight:600,color:'var(--navy)',marginBottom:24}}>
+              My Profile
+            </h2>
+            <div className="card">
+              {[
+                { label:'Full Name',    value:user.name },
+                { label:'Email',        value:user.email },
+                { label:'Account Type', value:user.role==='practitioner'?'Practitioner':'Patient' },
+                { label:'Member Since', value:new Date(user.joinedDate).toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'numeric'}) },
+              ].map(f => (
+                <div key={f.label} style={{
+                  display:'flex', justifyContent:'space-between', alignItems:'center',
+                  padding:'14px 0', borderBottom:'1px solid var(--gray-1)',
+                }}>
+                  <span style={{fontSize:'.82rem',fontWeight:600,color:'var(--gray-3)',textTransform:'uppercase',letterSpacing:'.06em'}}>{f.label}</span>
+                  <span style={{fontSize:'.9rem',color:'var(--navy)',fontWeight:500}}>{f.value}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{marginTop:16,padding:16,background:'rgba(200,169,110,.08)',border:'1px solid rgba(200,169,110,.2)',borderRadius:12,fontSize:'.875rem',color:'#7a5c1e'}}>
+              ℹ️ Profile editing, notification preferences, and payment methods are part of the Phase 2 rollout — coming soon!
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+const STEPS = ['Basic Info', 'Location', 'Services', 'Qualifications', 'Review'];
+
+function PractitionerPortal() {
+  const { user, register, login } = useAuth();
+  const toast = useToast();
+  const navigate = useNavigate();
+  const [mode, setMode] = useState('landing'); // landing | register | portal
+  const [step, setStep] = useState(0);
+  const [submitting, setSubmitting] = useState(false);
+
+  const [form, setForm] = useState({
+    name:'', email:'', password:'',
+    clinicName:'', phone:'', address:'', city:'', country:'UK',
+    bio:'',
+    services:[], conditions:[],
+    qualifications:'', govBody:'GOsC', govNumber:'',
+    yearsExp:'',
+  });
+
+  const serviceOptions = ['Structural Osteopathy','Cranial Osteopathy','Sports Rehabilitation','Visceral Manipulation','Paediatric Osteopathy','Pregnancy Osteopathy','Postural Assessment','Workplace Assessment'];
+  const conditionOptions = ['Back Pain','Neck Pain','Sports Injury','Headaches','Sciatica','Arthritis','Paediatric','Pregnancy','Elderly Care','Postural'];
+
+  const toggleArr = (key, val) => {
+    setForm(f => ({
+      ...f,
+      [key]: f[key].includes(val) ? f[key].filter(v=>v!==val) : [...f[key], val]
+    }));
+  };
+
+  const handleSubmit = async () => {
+    setSubmitting(true);
+    await new Promise(r=>setTimeout(r,1200));
+    const u = register(form.name, form.email, form.password, 'practitioner');
+    setSubmitting(false);
+    toast('🎉 Practice submitted for review! You\'ll hear back within 24 hours.', 'success');
+    setMode('portal');
+  };
+
+  const set = (k, v) => setForm(f=>({...f,[k]:v}));
+
+  /* ── LANDING ── */
+  if (mode === 'landing') return (
+    <div className="page page-enter">
+      {/* Hero */}
+      <section style={{
+        background:'linear-gradient(135deg,var(--navy),var(--teal))',
+        padding:'100px 48px 80px', textAlign:'center', position:'relative', overflow:'hidden',
+      }}>
+        <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px)',backgroundSize:'60px 60px'}}/>
+        <div style={{position:'relative',zIndex:1,maxWidth:740,margin:'0 auto'}}>
+          <div style={{display:'inline-flex',alignItems:'center',gap:8,padding:'6px 16px',border:'1px solid rgba(200,169,110,.4)',borderRadius:50,color:'var(--gold)',fontSize:'.78rem',fontWeight:500,letterSpacing:'.1em',textTransform:'uppercase',marginBottom:28}}>
+            🩺 For Practitioners
+          </div>
+          <h1 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'clamp(2.4rem,5vw,4.2rem)',fontWeight:300,color:'white',lineHeight:1.1,marginBottom:20}}>
+            Grow your osteopathic<br/><em style={{color:'var(--gold)'}}>practice online</em>
+          </h1>
+          <p style={{color:'rgba(255,255,255,.65)',fontSize:'1.05rem',lineHeight:1.7,maxWidth:560,margin:'0 auto 40px'}}>
+            Join 2,400+ verified practitioners on MyOsteopathy. Reach new patients, manage bookings, and build your reputation — all in one place.
+          </p>
+          <div style={{display:'flex',gap:14,justifyContent:'center',flexWrap:'wrap'}}>
+            <button onClick={()=>setMode('register')} className="btn-gold" style={{padding:'15px 36px',fontSize:'1rem'}}>
+              List My Practice — Free
+            </button>
+            <button onClick={()=>setMode('portal')} style={{
+              padding:'15px 32px',
+              background:'rgba(255,255,255,.1)', backdropFilter:'blur(8px)',
+              border:'1px solid rgba(255,255,255,.25)',
+              borderRadius:50, color:'white', fontWeight:600, fontSize:'1rem',
+              transition:'all .2s',
+            }}
+            onMouseEnter={e=>e.currentTarget.style.background='rgba(255,255,255,.18)'}
+            onMouseLeave={e=>e.currentTarget.style.background='rgba(255,255,255,.1)'}
+            >Sign In to Portal</button>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits */}
+      <section className="section" style={{background:'white'}}>
+        <div className="section-inner">
+          <div style={{textAlign:'center',marginBottom:48}}>
+            <div className="section-tag">Why MyOsteopathy?</div>
+            <h2 className="section-title">Everything you need to <em>thrive</em></h2>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:24}}>
+            {[
+              { icon:'🔍', title:'Get Discovered', body:'Appear in search results when patients in your area are looking for osteopathic care. Our SEO-optimised city pages drive thousands of monthly visitors.' },
+              { icon:'📅', title:'Online Booking (Phase 2)', body:'Accept appointments 24/7 with our integrated booking system. Reduce phone calls and no-shows with automated reminders and confirmations.' },
+              { icon:'⭐', title:'Build Your Reputation', body:'Collect verified patient reviews and showcase your qualifications, specialities, and before/after outcomes to build trust with new patients.' },
+              { icon:'📊', title:'Practice Analytics', body:'Understand where your patients come from, which conditions drive the most bookings, and how your profile performs against local competitors.' },
+              { icon:'🌍', title:'Global Reach', body:'Our platform operates in 48 countries. Whether you\'re in London or Dubai, we connect you with patients actively seeking osteopathic care.' },
+              { icon:'🛡', title:'Verified Badge', body:'Every listed practitioner is verified against their governing body registration. The GOsC Verified badge builds immediate trust with patients.' },
+            ].map((b,i) => (
+              <div key={i} className="card"
+                style={{animation:`fadeUp .5s ${i*.08}s ease both`}}
+              >
+                <div style={{
+                  width:52, height:52, borderRadius:12,
+                  background:'linear-gradient(135deg,var(--teal-dim),rgba(26,107,122,.2))',
+                  display:'flex', alignItems:'center', justifyContent:'center',
+                  fontSize:'1.5rem', marginBottom:16,
+                }}>{b.icon}</div>
+                <h4 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.15rem',fontWeight:600,color:'var(--navy)',marginBottom:8}}>{b.title}</h4>
+                <p style={{fontSize:'.875rem',lineHeight:1.65,color:'var(--gray-4)'}}>{b.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Pricing */}
+      <section className="section" style={{background:'var(--cream)'}}>
+        <div className="section-inner" style={{textAlign:'center'}}>
+          <div className="section-tag">Simple Pricing</div>
+          <h2 className="section-title">Start free, <em>upgrade when ready</em></h2>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:24,marginTop:40,maxWidth:900,margin:'40px auto 0'}}>
+            {[
+              { name:'Free', price:'£0', period:'/forever', features:['Basic listing','Patient enquiries','GOsC verification badge','City page inclusion'], cta:'Get Started', primary:false },
+              { name:'Professional', price:'£29', period:'/month', features:['Everything in Free','Online booking system','Review management','Priority search placement','Analytics dashboard'], cta:'Start Free Trial', primary:true },
+              { name:'Enterprise', price:'Custom', period:'', features:['Everything in Pro','Multi-practitioner clinic','API access','Dedicated account manager','Custom branding'], cta:'Contact Sales', primary:false },
+            ].map((plan,i) => (
+              <div key={i} style={{
+                padding:32,
+                background: plan.primary ? 'var(--navy)' : 'white',
+                border: plan.primary ? 'none' : '1.5px solid var(--gray-2)',
+                borderRadius:20,
+                boxShadow: plan.primary ? 'var(--shadow-xl)' : 'none',
+                transform: plan.primary ? 'scale(1.04)' : 'scale(1)',
+                transition:'transform .2s',
+              }}>
+                {plan.primary && <div style={{
+                  display:'inline-block', padding:'3px 12px',
+                  background:'var(--gold)', color:'var(--navy)',
+                  borderRadius:50, fontSize:'.72rem', fontWeight:700, letterSpacing:'.06em',
+                  marginBottom:16, textTransform:'uppercase',
+                }}>Most Popular</div>}
+                <div style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.2rem',fontWeight:600,color:plan.primary?'white':'var(--navy)',marginBottom:8}}>{plan.name}</div>
+                <div style={{display:'flex',alignItems:'baseline',gap:4,marginBottom:24}}>
+                  <span style={{fontFamily:'Cormorant Garamond,serif',fontSize:'2.4rem',fontWeight:600,color:plan.primary?'var(--gold)':'var(--navy)'}}>{plan.price}</span>
+                  <span style={{fontSize:'.875rem',color:plan.primary?'rgba(255,255,255,.5)':'var(--gray-3)'}}>{plan.period}</span>
+                </div>
+                <div style={{display:'flex',flexDirection:'column',gap:10,marginBottom:28}}>
+                  {plan.features.map(f=>(
+                    <div key={f} style={{display:'flex',alignItems:'center',gap:8,fontSize:'.875rem',color:plan.primary?'rgba(255,255,255,.8)':'var(--gray-4)'}}>
+                      <span style={{color:plan.primary?'var(--gold)':'var(--teal)',fontWeight:600}}>✓</span> {f}
+                    </div>
+                  ))}
+                </div>
+                <button onClick={()=>setMode('register')} style={{
+                  width:'100%', padding:'12px',
+                  background: plan.primary ? 'var(--gold)' : 'transparent',
+                  border: plan.primary ? 'none' : '1.5px solid var(--gray-2)',
+                  borderRadius:50,
+                  color: plan.primary ? 'var(--navy)' : 'var(--gray-4)',
+                  fontWeight:600, fontSize:'.9rem',
+                  cursor:'pointer', transition:'all .2s',
+                }}
+                onMouseEnter={e=>e.currentTarget.style.opacity='.85'}
+                onMouseLeave={e=>e.currentTarget.style.opacity='1'}
+                >{plan.cta}</button>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+
+  /* ── REGISTRATION WIZARD ── */
+  if (mode === 'register') return (
+    <div className="page page-enter">
+      <div style={{maxWidth:700,margin:'0 auto',padding:'60px 32px'}}>
+        {/* Progress */}
+        <div style={{marginBottom:40}}>
+          <div style={{display:'flex',justifyContent:'space-between',marginBottom:8}}>
+            {STEPS.map((s,i) => (
+              <div key={s} style={{
+                fontSize:'.72rem', fontWeight:600,
+                color: i<=step ? 'var(--teal)' : 'var(--gray-2)',
+                textTransform:'uppercase', letterSpacing:'.06em',
+                textAlign:'center', flex:1,
+              }}>{s}</div>
+            ))}
+          </div>
+          <div style={{height:4,background:'var(--gray-2)',borderRadius:2,overflow:'hidden'}}>
+            <div style={{
+              height:'100%', background:'linear-gradient(90deg,var(--teal),var(--teal-lt))',
+              width:`${((step+1)/STEPS.length)*100}%`, borderRadius:2,
+              transition:'width .4s ease',
+            }}/>
+          </div>
+        </div>
+
+        <div className="card" style={{padding:40,animation:'fadeUp .4s ease'}}>
+          {/* Step 0 — Account */}
+          {step === 0 && <>
+            <h2 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.6rem',fontWeight:600,color:'var(--navy)',marginBottom:6}}>Create your account</h2>
+            <p style={{color:'var(--gray-3)',marginBottom:28,fontSize:'.875rem'}}>Start by creating your practitioner login</p>
+            <div style={{display:'flex',flexDirection:'column',gap:16}}>
+              <div className="form-group"><label className="form-label">Full Name</label><input className="form-input" value={form.name} onChange={e=>set('name',e.target.value)} placeholder="Dr. Jane Smith"/></div>
+              <div className="form-group"><label className="form-label">Email Address</label><input className="form-input" type="email" value={form.email} onChange={e=>set('email',e.target.value)} placeholder="jane@myosteo.co.uk"/></div>
+              <div className="form-group"><label className="form-label">Password</label><input className="form-input" type="password" value={form.password} onChange={e=>set('password',e.target.value)} placeholder="••••••••"/></div>
+            </div>
+          </>}
+
+          {/* Step 1 — Location */}
+          {step === 1 && <>
+            <h2 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.6rem',fontWeight:600,color:'var(--navy)',marginBottom:6}}>Your clinic</h2>
+            <p style={{color:'var(--gray-3)',marginBottom:28,fontSize:'.875rem'}}>Tell patients where to find you</p>
+            <div style={{display:'flex',flexDirection:'column',gap:16}}>
+              <div className="form-group"><label className="form-label">Clinic Name</label><input className="form-input" value={form.clinicName} onChange={e=>set('clinicName',e.target.value)} placeholder="Bloomsbury Osteopathic Clinic"/></div>
+              <div className="form-group"><label className="form-label">Phone</label><input className="form-input" type="tel" value={form.phone} onChange={e=>set('phone',e.target.value)} placeholder="+44 207 123 4567"/></div>
+              <div className="form-group"><label className="form-label">Full Address</label><input className="form-input" value={form.address} onChange={e=>set('address',e.target.value)} placeholder="23 Southampton Row, London WC1B 5HJ"/></div>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+                <div className="form-group"><label className="form-label">City</label><input className="form-input" value={form.city} onChange={e=>set('city',e.target.value)} placeholder="London"/></div>
+                <div className="form-group"><label className="form-label">Country</label>
+                  <select className="form-input" value={form.country} onChange={e=>set('country',e.target.value)}>
+                    {['UK','Australia','UAE','USA','Canada','Germany','France','Netherlands'].map(c=><option key={c}>{c}</option>)}
+                  </select>
+                </div>
+              </div>
+            </div>
+          </>}
+
+          {/* Step 2 — Services */}
+          {step === 2 && <>
+            <h2 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.6rem',fontWeight:600,color:'var(--navy)',marginBottom:6}}>Services & conditions</h2>
+            <p style={{color:'var(--gray-3)',marginBottom:20,fontSize:'.875rem'}}>Select all that apply</p>
+            <div className="form-label" style={{marginBottom:10}}>Services Offered</div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:8,marginBottom:24}}>
+              {serviceOptions.map(s=>(
+                <button key={s} type="button" onClick={()=>toggleArr('services',s)} style={{
+                  padding:'7px 14px', borderRadius:50, fontSize:'.8rem', fontWeight:500,
+                  background: form.services.includes(s) ? 'var(--teal)' : 'var(--gray-1)',
+                  color: form.services.includes(s) ? 'white' : 'var(--gray-4)',
+                  border:'none', cursor:'pointer', transition:'all .15s',
+                }}>{s}</button>
+              ))}
+            </div>
+            <div className="form-label" style={{marginBottom:10}}>Conditions Treated</div>
+            <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
+              {conditionOptions.map(c=>(
+                <button key={c} type="button" onClick={()=>toggleArr('conditions',c)} style={{
+                  padding:'7px 14px', borderRadius:50, fontSize:'.8rem', fontWeight:500,
+                  background: form.conditions.includes(c) ? 'var(--gold)' : 'var(--gray-1)',
+                  color: form.conditions.includes(c) ? 'var(--navy)' : 'var(--gray-4)',
+                  border:'none', cursor:'pointer', transition:'all .15s',
+                }}>{c}</button>
+              ))}
+            </div>
+          </>}
+
+          {/* Step 3 — Qualifications */}
+          {step === 3 && <>
+            <h2 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.6rem',fontWeight:600,color:'var(--navy)',marginBottom:6}}>Qualifications & registration</h2>
+            <p style={{color:'var(--gray-3)',marginBottom:28,fontSize:'.875rem'}}>Required for GOsC Verified badge</p>
+            <div style={{display:'flex',flexDirection:'column',gap:16}}>
+              <div className="form-group"><label className="form-label">Qualifications</label><input className="form-input" value={form.qualifications} onChange={e=>set('qualifications',e.target.value)} placeholder="e.g. BSc(Hons) Osteopathy, DO, MSc Sports Med"/></div>
+              <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:12}}>
+                <div className="form-group"><label className="form-label">Governing Body</label>
+                  <select className="form-input" value={form.govBody} onChange={e=>set('govBody',e.target.value)}>
+                    {['GOsC (UK)','AHPRA (Australia)','DHA (Dubai)','NBEO (USA)','OCOA (Canada)'].map(b=><option key={b}>{b}</option>)}
+                  </select>
+                </div>
+                <div className="form-group"><label className="form-label">Registration Number</label><input className="form-input" value={form.govNumber} onChange={e=>set('govNumber',e.target.value)} placeholder="GOsC-12345"/></div>
+              </div>
+              <div className="form-group"><label className="form-label">Years of Experience</label><input className="form-input" type="number" value={form.yearsExp} onChange={e=>set('yearsExp',e.target.value)} placeholder="e.g. 8" min="0" max="60"/></div>
+              <div className="form-group"><label className="form-label">Bio / About You</label>
+                <textarea className="form-input" rows={4} value={form.bio} onChange={e=>set('bio',e.target.value)}
+                  placeholder="Tell patients about your approach, background, and specialities…" style={{resize:'vertical'}}/>
+              </div>
+            </div>
+          </>}
+
+          {/* Step 4 — Review */}
+          {step === 4 && <>
+            <h2 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.6rem',fontWeight:600,color:'var(--navy)',marginBottom:6}}>Review & submit</h2>
+            <p style={{color:'var(--gray-3)',marginBottom:24,fontSize:'.875rem'}}>Check your details before submitting for verification</p>
+            <div style={{display:'flex',flexDirection:'column',gap:10}}>
+              {[
+                { label:'Name', value:form.name },
+                { label:'Clinic', value:form.clinicName },
+                { label:'Location', value:`${form.city}, ${form.country}` },
+                { label:'Services', value:form.services.length ? form.services.join(', ') : '—' },
+                { label:'Governing Body', value:form.govBody },
+                { label:'Reg. Number', value:form.govNumber || '—' },
+              ].map(f=>(
+                <div key={f.label} style={{display:'flex',justifyContent:'space-between',padding:'10px 0',borderBottom:'1px solid var(--gray-1)'}}>
+                  <span style={{fontSize:'.82rem',color:'var(--gray-3)',fontWeight:600}}>{f.label}</span>
+                  <span style={{fontSize:'.875rem',color:'var(--navy)',fontWeight:500,textAlign:'right',maxWidth:'60%'}}>{f.value}</span>
+                </div>
+              ))}
+            </div>
+            <div style={{marginTop:20,padding:14,background:'rgba(26,107,122,.08)',border:'1px solid rgba(26,107,122,.2)',borderRadius:10,fontSize:'.82rem',color:'var(--teal)',lineHeight:1.65}}>
+              ✓ Our team will verify your registration with {form.govBody} within 24 hours. You'll receive an email once your listing is live.
+            </div>
+          </>}
+
+          {/* Navigation */}
+          <div style={{display:'flex',justifyContent:'space-between',marginTop:32,gap:12}}>
+            <button onClick={()=>step===0?setMode('landing'):setStep(s=>s-1)}
+              className="btn-outline" style={{flex:1,justifyContent:'center'}}>
+              {step===0 ? '← Back' : '← Previous'}
+            </button>
+            {step < STEPS.length-1 ? (
+              <button onClick={()=>setStep(s=>s+1)} className="btn-primary" style={{flex:2,justifyContent:'center'}}>
+                Continue →
+              </button>
+            ) : (
+              <button onClick={handleSubmit} className="btn-primary" style={{
+                flex:2,justifyContent:'center',
+                opacity:submitting?.7:1,
+              }}>
+                {submitting
+                  ? <><span style={{width:16,height:16,border:'2px solid rgba(255,255,255,.4)',borderTopColor:'white',borderRadius:'50%',animation:'spin .7s linear infinite',display:'inline-block',marginRight:8}}/>Submitting…</>
+                  : '🚀 Submit for Review'}
+              </button>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  /* ── PORTAL DASHBOARD ── */
+  return (
+    <div className="page page-enter">
+      <div style={{
+        background:'linear-gradient(135deg,var(--navy),var(--teal))',
+        padding:'40px 48px',
+      }}>
+        <div style={{maxWidth:1100,margin:'0 auto',display:'flex',alignItems:'center',justifyContent:'space-between'}}>
+          <div>
+            <div className="section-tag" style={{color:'var(--gold)'}}>Practitioner Portal</div>
+            <h1 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.8rem',fontWeight:600,color:'white'}}>
+              {user ? `Welcome, ${user.name.split(' ')[0]}` : 'Practice Dashboard'}
+            </h1>
+          </div>
+          <button onClick={()=>setMode('landing')} className="btn-gold">← Portal Home</button>
+        </div>
+      </div>
+
+      <div style={{maxWidth:1100,margin:'0 auto',padding:'40px 48px'}}>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(4,1fr)',gap:16,marginBottom:32}}>
+          {[
+            { icon:'👁', label:'Profile Views', value:'—', sub:'This month' },
+            { icon:'📅', label:'Bookings', value:'—', sub:'Pending' },
+            { icon:'⭐', label:'Avg Rating', value:'—', sub:'From reviews' },
+            { icon:'📍', label:'Search Rank', value:'—', sub:'In your city' },
+          ].map(s=>(
+            <div key={s.label} style={{
+              background:'white', border:'1.5px solid var(--gray-2)',
+              borderRadius:'var(--radius-lg)', padding:22, textAlign:'center',
+            }}>
+              <div style={{fontSize:'1.6rem',marginBottom:8}}>{s.icon}</div>
+              <div style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.8rem',fontWeight:600,color:'var(--navy)'}}>{s.value}</div>
+              <div style={{fontSize:'.78rem',color:'var(--gray-3)',marginTop:2}}>{s.label}</div>
+              <div style={{fontSize:'.7rem',color:'var(--gray-2)',marginTop:2}}>{s.sub}</div>
+            </div>
+          ))}
+        </div>
+
+        <div style={{
+          padding:40, background:'white', border:'1.5px solid var(--gray-2)',
+          borderRadius:20, textAlign:'center',
+        }}>
+          <div style={{fontSize:'3rem',marginBottom:16}}>🚀</div>
+          <h3 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.4rem',color:'var(--navy)',marginBottom:8}}>
+            Full portal coming in Phase 2
+          </h3>
+          <p style={{color:'var(--gray-4)',lineHeight:1.7,maxWidth:480,margin:'0 auto 24px'}}>
+            The complete practitioner dashboard — booking management, patient messaging, analytics, review responses, and profile editing — is actively being built.
+          </p>
+          <div style={{display:'flex',gap:10,justifyContent:'center',flexWrap:'wrap'}}>
+            {['Booking Calendar','Patient Messages','Analytics','Review Management','SEO Insights'].map(f=>(
+              <span key={f} style={{
+                padding:'6px 14px', background:'var(--teal-dim)',
+                color:'var(--teal)', borderRadius:50, fontSize:'.8rem', fontWeight:500,
+              }}>{f}</span>
+            ))}
+          </div>
+          <button onClick={()=>setMode('register')} className="btn-primary" style={{marginTop:24}}>
+            Register Your Practice Now
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function About() {
+  const [heroRef, heroVisible] = useReveal(.1);
+  const [secRef, secVisible] = useReveal(.1);
+
+  return (
+    <div className="page page-enter">
+      {/* Hero */}
+      <section style={{
+        background:'linear-gradient(135deg,var(--navy),var(--teal))',
+        padding:'100px 48px 80px', textAlign:'center', position:'relative', overflow:'hidden',
+      }}>
+        <div style={{position:'absolute',inset:0,backgroundImage:'linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.025) 1px,transparent 1px)',backgroundSize:'60px 60px'}}/>
+        <div style={{position:'relative',zIndex:1,maxWidth:760,margin:'0 auto'}}>
+          <div className="section-tag" style={{color:'var(--gold)'}}>Education</div>
+          <h1 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'clamp(2.4rem,5vw,4rem)',fontWeight:300,color:'white',lineHeight:1.12,marginBottom:20}}>
+            What is <em style={{color:'var(--gold)'}}>Osteopathy?</em>
+          </h1>
+          <p style={{color:'rgba(255,255,255,.65)',fontSize:'1.05rem',lineHeight:1.72,maxWidth:580,margin:'0 auto'}}>
+            A comprehensive guide to osteopathic medicine — its principles, methods, and the conditions it treats most effectively.
+          </p>
+        </div>
+      </section>
+
+      {/* Introduction */}
+      <section className="section" style={{background:'white'}}>
+        <div className="section-inner">
+          <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:72,alignItems:'center'}}>
+            <div>
+              <div className="section-tag">The Basics</div>
+              <h2 className="section-title">Drug-free, holistic, <em>evidence-based</em></h2>
+              <p className="section-body" style={{marginBottom:16}}>
+                Osteopathy is a form of manual medicine that focuses on total body health by treating and strengthening the musculoskeletal framework — the bones, muscles, and connective tissues that support and move your body.
+              </p>
+              <p className="section-body" style={{marginBottom:16}}>
+                Unlike conventional medicine's focus on isolated symptoms, osteopathy recognises the intimate relationship between the body's structure and its function. When structure is compromised, function is affected — and vice versa.
+              </p>
+              <p className="section-body" style={{marginBottom:28}}>
+                Osteopaths use their hands to diagnose, treat, and prevent illness and injury using a range of techniques including soft tissue massage, joint mobilisation and manipulation, and cranial osteopathy.
+              </p>
+              <div style={{display:'flex',flexWrap:'wrap',gap:8}}>
+                {['Drug-free','Non-invasive','Evidence-based','Holistic','Suitable for all ages'].map(p=>(
+                  <span key={p} style={{padding:'6px 14px',border:'1.5px solid var(--gray-2)',borderRadius:50,fontSize:'.8rem',color:'var(--gray-4)',fontWeight:500}}>{p}</span>
+                ))}
+              </div>
+            </div>
+            <div style={{
+              background:'linear-gradient(135deg,var(--navy),var(--teal))',
+              borderRadius:24, padding:40, display:'flex', flexDirection:'column', gap:20,
+            }}>
+              {[
+                { num:'1', title:'History', body:'Osteopathy was developed in 1874 by Dr Andrew Taylor Still in the United States. It has since become a globally recognised healthcare profession.' },
+                { num:'2', title:'Training', body:'In the UK, osteopaths undergo a minimum 4–5 year degree programme. They are regulated by the General Osteopathic Council (GOsC).' },
+                { num:'3', title:'Evidence', body:'There is strong clinical evidence for osteopathy\'s effectiveness in treating back pain, neck pain, headaches, and various musculoskeletal conditions.' },
+              ].map(f=>(
+                <div key={f.num} style={{display:'flex',gap:16}}>
+                  <div style={{
+                    width:36, height:36, borderRadius:'50%', flexShrink:0,
+                    background:'rgba(200,169,110,.2)',
+                    display:'flex', alignItems:'center', justifyContent:'center',
+                    fontFamily:'Cormorant Garamond,serif', fontSize:'1rem', fontWeight:600, color:'var(--gold)',
+                  }}>{f.num}</div>
+                  <div>
+                    <div style={{fontWeight:600,color:'white',marginBottom:4,fontSize:'.9rem'}}>{f.title}</div>
+                    <div style={{fontSize:'.82rem',color:'rgba(255,255,255,.6)',lineHeight:1.65}}>{f.body}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Core Principles */}
+      <section className="section" ref={secRef} style={{background:'var(--cream)'}}>
+        <div className="section-inner">
+          <div style={{textAlign:'center',marginBottom:48}}>
+            <div className="section-tag">Core Philosophy</div>
+            <h2 className="section-title">The four <em>principles</em> of osteopathy</h2>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(2,1fr)',gap:24}}>
+            {[
+              { num:'01', title:'The body is a unit', body:'The person is a unit of body, mind, and spirit. Osteopaths treat the whole person, not just the presenting symptom or isolated body part.' },
+              { num:'02', title:'Structure and function', body:'The body\'s structure and function are reciprocally interrelated. When structure is compromised, function is affected throughout the entire system.' },
+              { num:'03', title:'The body self-heals', body:'The body has an inherent capacity for self-regulation, self-healing, and health maintenance. Osteopathy facilitates this natural capacity.' },
+              { num:'04', title:'Rational treatment', body:'Rational treatment is based on an understanding of the basic principles of body unity, self-regulation, and the interrelationship of structure and function.' },
+            ].map((p,i)=>(
+              <div key={i} style={{
+                padding:32, background:'white', borderRadius:'var(--radius-lg)',
+                border:'1.5px solid var(--gray-2)',
+                display:'flex', gap:20,
+                transition:'all var(--transition)',
+                animation: secVisible ? `fadeUp .5s ${i*.1}s ease both` : 'none',
+              }}
+              onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--teal)';e.currentTarget.style.transform='translateY(-4px)';e.currentTarget.style.boxShadow='0 8px 32px rgba(26,107,122,.1)'}}
+              onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--gray-2)';e.currentTarget.style.transform='translateY(0)';e.currentTarget.style.boxShadow='none'}}
+              >
+                <div style={{
+                  fontFamily:'Cormorant Garamond,serif',fontSize:'2rem',fontWeight:300,
+                  color:'var(--gray-2)',lineHeight:1,flexShrink:0,
+                }}>{p.num}</div>
+                <div>
+                  <h4 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.15rem',fontWeight:600,color:'var(--navy)',marginBottom:8}}>{p.title}</h4>
+                  <p style={{fontSize:'.875rem',lineHeight:1.65,color:'var(--gray-4)'}}>{p.body}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Techniques */}
+      <section className="section" style={{background:'white'}}>
+        <div className="section-inner">
+          <div style={{textAlign:'center',marginBottom:48}}>
+            <div className="section-tag">Treatment Methods</div>
+            <h2 className="section-title">How osteopaths <em>treat you</em></h2>
+          </div>
+          <div style={{display:'grid',gridTemplateColumns:'repeat(3,1fr)',gap:20}}>
+            {[
+              { icon:'🤲', title:'Soft Tissue Techniques', body:'Rhythmic stretching and deep pressure to relax tight muscles and improve circulation around joints and the spine.' },
+              { icon:'🔄', title:'Joint Articulation', body:'Passive movement of joints through their natural range of motion to improve mobility and reduce stiffness.' },
+              { icon:'⚡', title:'High Velocity Techniques', body:'Short, precise movements to improve joint mobility. This is what creates the "click" sometimes heard during treatment.' },
+              { icon:'🧠', title:'Cranial Osteopathy', body:'Extremely gentle techniques applied to the skull and sacrum. Widely used for babies, children, and headaches.' },
+              { icon:'🫀', title:'Visceral Manipulation', body:'Gentle treatment of the body\'s internal organs and their connective tissue attachments to improve function and mobility.' },
+              { icon:'🏃', title:'Functional Techniques', body:'Indirect techniques that guide the body into positions of ease to allow tissues to unwind naturally without force.' },
+            ].map((t,i)=>(
+              <div key={i} className="card" style={{animation:`fadeUp .5s ${i*.07}s ease both`}}>
+                <div style={{fontSize:'1.6rem',marginBottom:14}}>{t.icon}</div>
+                <h4 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.1rem',fontWeight:600,color:'var(--navy)',marginBottom:8}}>{t.title}</h4>
+                <p style={{fontSize:'.85rem',lineHeight:1.65,color:'var(--gray-4)'}}>{t.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* CTA */}
+      <section style={{background:'linear-gradient(135deg,var(--teal),var(--navy))',padding:'80px 48px',textAlign:'center'}}>
+        <h2 className="section-title" style={{color:'white',marginBottom:12}}>Ready to find an osteopath <em style={{color:'var(--gold-lt)'}}>near you?</em></h2>
+        <p style={{color:'rgba(255,255,255,.6)',maxWidth:440,margin:'0 auto 32px',lineHeight:1.7}}>Browse our directory of 2,400+ verified practitioners worldwide.</p>
+        <Link to="/find" className="btn-gold">Find a Practitioner →</Link>
+      </section>
+    </div>
+  );
+}
+
+const CONDITION_DETAILS = {
+  'back-pain':       { desc:'Lower back pain affects 80% of adults at some point. Osteopathy addresses the structural causes rather than masking symptoms.', related:['Sciatica','Postural Problems','Disc Issues'] },
+  'sports-injury':   { desc:'From sprains to overuse injuries, osteopathic treatment accelerates recovery and addresses the biomechanical factors that led to injury.', related:['Back Pain','Neck Pain','Rehabilitation'] },
+  'neck-pain':       { desc:'Neck pain from desk work, whiplash, or postural issues responds exceptionally well to osteopathic treatment.', related:['Headaches','Back Pain','Postural Problems'] },
+  'paediatric':      { desc:'Cranial osteopathy is highly effective for babies and children — birth trauma, colic, sleep difficulties, and developmental concerns.', related:['Cranial Osteopathy','Postural Problems'] },
+  'pregnancy':       { desc:'Safe, gentle treatment throughout pregnancy for back pain, pelvic girdle pain, and preparation for birth.', related:['Back Pain','Postural Problems','Pelvic Pain'] },
+  'headaches':       { desc:'Tension headaches, migraines, and cervicogenic headaches often respond dramatically to osteopathic treatment targeting the neck and upper back.', related:['Neck Pain','Back Pain','Postural Problems'] },
+  'postural':        { desc:'Posture affects everything from energy levels to pain. Osteopaths address the structural and movement patterns driving poor posture.', related:['Back Pain','Neck Pain','Workplace Injuries'] },
+  'arthritis':       { desc:'Osteopathy doesn\'t cure arthritis but significantly reduces pain and improves joint mobility and quality of life.', related:['Back Pain','Elderly Care','Joint Pain'] },
+  'sciatica':        { desc:'Sciatic nerve pain from disc herniation or piriformis syndrome often resolves more quickly with osteopathic treatment than other approaches.', related:['Back Pain','Disc Problems','Hip Pain'] },
+  'cranial-osteopathy': { desc:'Ultra-gentle work on the skull and sacrum. Effective for babies, stress, headaches, TMJ disorders, and hormonal imbalances.', related:['Headaches','Paediatric','Stress'] },
+  'visceral-osteopathy':{ desc:'Gentle treatment of the body\'s internal organs and their connective tissue supports. Addresses digestive issues, pelvic pain, and more.', related:['Back Pain','Pelvic Pain','Digestive Health'] },
+  'elderly-care':    { desc:'Gentle, adapted treatment for older patients managing arthritis, balance issues, post-surgical recovery, and age-related changes.', related:['Arthritis','Balance','Rehabilitation'] },
+};
+
+function Conditions() {
+  return (
+    <div className="page page-enter">
+      {/* Hero */}
+      <section style={{
+        background:'linear-gradient(135deg,var(--navy),var(--teal))',
+        padding:'100px 48px 80px', textAlign:'center',
+      }}>
+        <div className="section-tag" style={{color:'var(--gold)'}}>Conditions Treated</div>
+        <h1 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'clamp(2.4rem,5vw,4rem)',fontWeight:300,color:'white',lineHeight:1.12,marginBottom:16}}>
+          Find specialists for <em style={{color:'var(--gold)'}}>your condition</em>
+        </h1>
+        <p style={{color:'rgba(255,255,255,.65)',fontSize:'1rem',lineHeight:1.72,maxWidth:520,margin:'0 auto'}}>
+          Browse all conditions treated by verified osteopaths on our platform, and find practitioners who specialise in your specific needs.
+        </p>
+      </section>
+
+      {/* Conditions grid */}
+      <section className="section" style={{background:'var(--cream)'}}>
+        <div className="section-inner">
+          <div style={{display:'grid',gridTemplateColumns:'repeat(auto-fill,minmax(280px,1fr))',gap:20}}>
+            {CONDITIONS.map((cond, i) => {
+              const detail = CONDITION_DETAILS[cond.slug] || {};
+              return (
+                <div key={cond.name} style={{
+                  background:'white', border:'1.5px solid var(--gray-2)',
+                  borderRadius:'var(--radius-lg)', padding:28,
+                  transition:'all var(--transition)',
+                  animation:`fadeUp .5s ${i*.05}s ease both`,
+                  display:'flex', flexDirection:'column',
+                }}
+                onMouseEnter={e=>{e.currentTarget.style.borderColor='var(--teal)';e.currentTarget.style.transform='translateY(-5px)';e.currentTarget.style.boxShadow='0 8px 32px rgba(26,107,122,.1)'}}
+                onMouseLeave={e=>{e.currentTarget.style.borderColor='var(--gray-2)';e.currentTarget.style.transform='translateY(0)';e.currentTarget.style.boxShadow='none'}}
+                >
+                  <div style={{fontSize:'2rem',marginBottom:12}}>{cond.icon}</div>
+                  <div style={{display:'flex',justifyContent:'space-between',alignItems:'flex-start',marginBottom:10}}>
+                    <h3 style={{fontFamily:'Cormorant Garamond,serif',fontSize:'1.2rem',fontWeight:600,color:'var(--navy)'}}>{cond.name}</h3>
+                    <span style={{
+                      padding:'3px 10px', background:'var(--teal-dim)',
+                      color:'var(--teal)', borderRadius:50, fontSize:'.7rem', fontWeight:600, flexShrink:0, marginLeft:8,
+                    }}>{cond.count.toLocaleString()}</span>
+                  </div>
+                  {detail.desc && <p style={{fontSize:'.85rem',lineHeight:1.65,color:'var(--gray-4)',marginBottom:14,flex:1}}>{detail.desc}</p>}
+                  {detail.related && (
+                    <div style={{display:'flex',flexWrap:'wrap',gap:5,marginBottom:16}}>
+                      {detail.related.map(r=>(
+                        <span key={r} style={{padding:'3px 9px',background:'var(--gray-1)',borderRadius:50,fontSize:'.72rem',color:'var(--gray-3)'}}>{r}</span>
+                      ))}
+                    </div>
+                  )}
+                  <Link to={`/find?cond=${cond.slug}`} style={{
+                    display:'flex', alignItems:'center', justifyContent:'center', gap:6,
+                    padding:'10px', background:'var(--teal)',
+                    borderRadius:10, color:'white', fontSize:'.82rem', fontWeight:600,
+                    transition:'background .2s', marginTop:'auto',
+                  }}
+                  onMouseEnter={e=>e.currentTarget.style.background='var(--teal-lt)'}
+                  onMouseLeave={e=>e.currentTarget.style.background='var(--teal)'}
+                  >
+                    Find {cond.name} Specialists →
+                  </Link>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
+
+
+
+function AppShell() {
+  const location = ReactRouterDOM.useLocation();
+  const pathname = location.pathname;
+  const NO_FOOTER = ['/find'];
+  const showFooter = !NO_FOOTER.some(p => pathname.startsWith(p));
+  return React.createElement(React.Fragment, null,
+    React.createElement(Nav, null),
+    React.createElement(ReactRouterDOM.Routes, null,
+      React.createElement(ReactRouterDOM.Route, {path:'/', element: React.createElement(Home)}),
+      React.createElement(ReactRouterDOM.Route, {path:'/about', element: React.createElement(About)}),
+      React.createElement(ReactRouterDOM.Route, {path:'/find', element: React.createElement(FindPractitioner)}),
+      React.createElement(ReactRouterDOM.Route, {path:'/conditions', element: React.createElement(Conditions)}),
+      React.createElement(ReactRouterDOM.Route, {path:'/clinic/:slug', element: React.createElement(ClinicProfile)}),
+      React.createElement(ReactRouterDOM.Route, {path:'/dashboard', element: React.createElement(Dashboard)}),
+      React.createElement(ReactRouterDOM.Route, {path:'/dashboard/bookings', element: React.createElement(Dashboard)}),
+      React.createElement(ReactRouterDOM.Route, {path:'/dashboard/saved', element: React.createElement(Dashboard)}),
+      React.createElement(ReactRouterDOM.Route, {path:'/practitioners', element: React.createElement(PractitionerPortal)}),
+      React.createElement(ReactRouterDOM.Route, {path:'/practitioners/portal', element: React.createElement(PractitionerPortal)}),
+    ),
+    showFooter ? React.createElement(Footer) : null
+  );
+}
+function App() {
+  return React.createElement(
+    ReactRouterDOM.BrowserRouter, null,
+    React.createElement(AuthProvider, null,
+      React.createElement(ReviewsProvider, null,
+        React.createElement(ToastProvider, null,
+          React.createElement(AppShell)
+        )
+      )
+    )
+  );
+}
+ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(App));
+
+</script>
+</body>
+</html>
